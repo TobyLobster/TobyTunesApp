@@ -374,6 +374,7 @@ class Player : NSObject, Observer {
         }
     }
 
+    @discardableResult
     func setTrack(persistentID: UInt64) -> Bool {
         // Get media item from persistent ID
         if let mediaItem = MusicLibrary.getMediaItems(itemIDs: [persistentID]).first {
@@ -395,6 +396,7 @@ class Player : NSObject, Observer {
         return false
     }
 
+    @discardableResult 
     func play() -> Bool {
         //print("play") // TOBY
         // Play current track if we have one
@@ -441,6 +443,7 @@ class Player : NSObject, Observer {
         isFastPlaying = false
     }
 
+    @discardableResult 
     func skipForwards(skipTime: Double = 30.0) -> Bool {
         //print("skipForwards") // TOBY
         if playState() == .Playing || playState() == .Paused {
@@ -453,6 +456,7 @@ class Player : NSObject, Observer {
         return false
     }
 
+    @discardableResult
     func skipBackwards(skipTime: Double = 30.0) -> Bool {
         //print("skipBackwards") // TOBY
         if playState() == .Playing || playState() == .Paused {
@@ -511,6 +515,7 @@ class Player : NSObject, Observer {
         isFastPlaying = false
     }
 
+    @discardableResult
     func skipToNextItem() -> Bool {
         guard let persistentID = playingTrack?.persistentID else { return false }
         guard let index = queue.findTrackIndex(persistentID: persistentID) else { return false }
@@ -525,6 +530,7 @@ class Player : NSObject, Observer {
         return false
     }
 
+    @discardableResult
     func skipToPreviousItem() -> Bool {
         guard let persistentID = playingTrack?.persistentID else { return false }
         guard let index = queue.findTrackIndex(persistentID: persistentID) else { return false }
@@ -538,6 +544,7 @@ class Player : NSObject, Observer {
         return false
     }
 
+    @discardableResult
     func skipToBeginning() -> Bool {
         if queue.tracks.count > 0 {
             setTrack(persistentID: queue.tracks[0].persistentID)

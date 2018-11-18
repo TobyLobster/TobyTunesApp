@@ -229,6 +229,7 @@ struct Bookmarks {
         return nil
     }
 
+    @discardableResult 
     static func addCurrentPlaylistAsBookmark() -> Bool {
         if isPlaylistAlreadyBookmarked(playlist: data.currentPlaylist) {
             return false
@@ -268,6 +269,7 @@ struct Bookmarks {
         return nil
     }
 
+    @discardableResult 
     static func removeBookmark(bookmarkId: Int) -> Int? {
         if let index = Bookmarks.findMarkIndexWithId(bookmarkId: bookmarkId) {
             data.marks.remove(at: index)
@@ -277,6 +279,7 @@ struct Bookmarks {
         return nil
     }
 
+    @discardableResult
     static func resetBookmark(bookmarkId: Int) -> Int? {
         if let index = Bookmarks.findMarkIndexWithId(bookmarkId: bookmarkId) {
             data.marks[index].currentItemIndex = 0

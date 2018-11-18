@@ -390,6 +390,7 @@ struct Utilities {
         return appDirectory
     }
 
+    @discardableResult
     static func createFolderAtURL(folderURL: URL) -> Bool {
         do {
             try FileManager().createDirectory(at: folderURL, withIntermediateDirectories: true, attributes: nil)
