@@ -1,0 +1,11 @@
+convert ./iPad/9.7\ inch/1.PNG -resize 2732x2048\! ./iPad/12.9\ inch/1.PNG
+convert ./iPad/9.7\ inch/3.PNG -resize 2732x2048\! ./iPad/12.9\ inch/3.PNG
+convert ./iPad/9.7\ inch/5.PNG -resize 2732x2048\! ./iPad/12.9\ inch/5.PNG
+convert ./iPad/9.7\ inch/2.PNG -resize 2048x2732\! ./iPad/12.9\ inch/2.PNG
+convert ./iPad/9.7\ inch/4.PNG -resize 2048x2732\! ./iPad/12.9\ inch/4.PNG
+
+convert ./iPhone/4.7\ inch/1.jpg -resize 1242x2208\! ./iPhone/5.5\ inch/1.PNG
+convert ./iPhone/4.7\ inch/2.jpg -resize 1242x2208\! ./iPhone/5.5\ inch/2.PNG
+convert ./iPhone/4.7\ inch/3.jpg -resize 2208x1242\! ./iPhone/5.5\ inch/3.PNG
+convert ./iPhone/4.7\ inch/4.jpg -resize 1242x2208\! ./iPhone/5.5\ inch/4.PNG
+convert ./iPhone/4.7\ inch/5.jpg -resize 1242x2208\! ./iPhone/5.5\ inch/5.PNG

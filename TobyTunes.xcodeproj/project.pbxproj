@@ -1,0 +1,701 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FF2250151D2F90C6002D0066 /* TTArtistsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2250141D2F90C6002D0066 /* TTArtistsCollectionViewCell.swift */; };
+		FF2250171D2FBBC1002D0066 /* TTTrackCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2250161D2FBBC1002D0066 /* TTTrackCollectionViewCell.swift */; };
+		FF2250191D311AC5002D0066 /* TTSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2250181D311AC5002D0066 /* TTSegue.swift */; };
+		FF22501B1D329D0D002D0066 /* NowPlayingNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF22501A1D329D0D002D0066 /* NowPlayingNavigationController.swift */; };
+		FF2250201D33789B002D0066 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF22501E1D33789B002D0066 /* Main.storyboard */; };
+		FF2250221D337D33002D0066 /* GenresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2250211D337D33002D0066 /* GenresViewController.swift */; };
+		FF2250241D338086002D0066 /* TTGenreCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2250231D338086002D0066 /* TTGenreCollectionViewCell.swift */; };
+		FF2250261D342CAD002D0066 /* TTCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2250251D342CAD002D0066 /* TTCollectionViewFlowLayout.swift */; };
+		FF2250281D379558002D0066 /* MusicLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2250271D379558002D0066 /* MusicLibrary.swift */; };
+		FF22502A1D38E35C002D0066 /* Bookmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2250291D38E35C002D0066 /* Bookmarks.swift */; };
+		FF22502C1D38EA40002D0066 /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF22502B1D38EA40002D0066 /* BookmarksViewController.swift */; };
+		FF22502E1D394BD7002D0066 /* TTBookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF22502D1D394BD7002D0066 /* TTBookmarkCollectionViewCell.swift */; };
+		FF23978B21A1B37500B00508 /* MarqueeLabel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF23978521A1B23600B00508 /* MarqueeLabel.framework */; };
+		FF23978E21A1B3AD00B00508 /* MarqueeLabelSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF23978C21A1B3AD00B00508 /* MarqueeLabelSwift.swift */; };
+		FF262CD11D5A04CC00172036 /* AudioFilterTap.m in Sources */ = {isa = PBXBuildFile; fileRef = FF262CD01D5A04CC00172036 /* AudioFilterTap.m */; };
+		FF51F5AD1D21BD0400637E58 /* TTAlbumsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF51F5AC1D21BD0400637E58 /* TTAlbumsCollectionViewCell.swift */; };
+		FF51F5AF1D226AC300637E58 /* TTTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF51F5AE1D226AC300637E58 /* TTTabBarController.swift */; };
+		FF5BF6EC1D4227DB00050B55 /* RZCollectionTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = FF5BF6E91D4227DA00050B55 /* RZCollectionTableView.m */; };
+		FF5BF6ED1D4227DB00050B55 /* RZCollectionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FF5BF6EB1D4227DB00050B55 /* RZCollectionTableViewCell.m */; };
+		FF6D00071D1AE2FE004CB9F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF6D00061D1AE2FE004CB9F5 /* Assets.xcassets */; };
+		FF6D000A1D1AE2FE004CB9F5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF6D00081D1AE2FE004CB9F5 /* LaunchScreen.storyboard */; };
+		FF6D00151D1AE2FE004CB9F5 /* TobyTunesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6D00141D1AE2FE004CB9F5 /* TobyTunesUITests.swift */; };
+		FF7434E61D547080005AD50B /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7434E51D547080005AD50B /* Player.swift */; };
+		FF7434E81D569BE2005AD50B /* ObserverPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7434E71D569BE2005AD50B /* ObserverPattern.swift */; };
+		FF87CA351D1AE3D3001A5945 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF87CA281D1AE3D3001A5945 /* AboutViewController.swift */; };
+		FF87CA361D1AE3D3001A5945 /* AlbumsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF87CA291D1AE3D3001A5945 /* AlbumsViewController.swift */; };
+		FF87CA371D1AE3D3001A5945 /* AlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF87CA2A1D1AE3D3001A5945 /* AlbumViewController.swift */; };
+		FF87CA381D1AE3D3001A5945 /* ALVolumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF87CA2B1D1AE3D3001A5945 /* ALVolumeView.swift */; };
+		FF87CA391D1AE3D3001A5945 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF87CA2C1D1AE3D3001A5945 /* AppDelegate.swift */; };
+		FF87CA3A1D1AE3D3001A5945 /* ArtistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF87CA2D1D1AE3D3001A5945 /* ArtistsViewController.swift */; };
+		FF87CA3B1D1AE3D3001A5945 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF87CA2E1D1AE3D3001A5945 /* Constants.swift */; };
+		FF87CA3E1D1AE3D3001A5945 /* NowPlayingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF87CA311D1AE3D3001A5945 /* NowPlayingViewController.swift */; };
+		FF87CA401D1AE3D3001A5945 /* UIImage+Margins.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF87CA331D1AE3D3001A5945 /* UIImage+Margins.swift */; };
+		FF87CA411D1AE3D3001A5945 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF87CA341D1AE3D3001A5945 /* Utilities.swift */; };
+		FFBF461321A1F2C9002766DD /* MarqueeLabel.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF23978521A1B23600B00508 /* MarqueeLabel.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FF23978221A1B23600B00508 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF23977D21A1B23600B00508 /* MarqueeLabel.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EA167CDF1CA8B40C00DBF930;
+			remoteInfo = MarqueeLabelDemo;
+		};
+		FF23978421A1B23600B00508 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF23977D21A1B23600B00508 /* MarqueeLabel.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EAE4AC711CA8DCBB006C1ECC;
+			remoteInfo = MarqueeLabel;
+		};
+		FF6D00111D1AE2FE004CB9F5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF6DFFF21D1AE2FE004CB9F5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FF6DFFF91D1AE2FE004CB9F5;
+			remoteInfo = TobyTunes;
+		};
+		FFBF460E21A1F12B002766DD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF23977D21A1B23600B00508 /* MarqueeLabel.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = EAE4AC701CA8DCBB006C1ECC;
+			remoteInfo = MarqueeLabel;
+		};
+		FFBF461421A1F2C9002766DD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF23977D21A1B23600B00508 /* MarqueeLabel.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = EAE4AC701CA8DCBB006C1ECC;
+			remoteInfo = MarqueeLabel;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FFBF461621A1F2C9002766DD /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FFBF461321A1F2C9002766DD /* MarqueeLabel.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		FF2250141D2F90C6002D0066 /* TTArtistsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTArtistsCollectionViewCell.swift; sourceTree = "<group>"; };
+		FF2250161D2FBBC1002D0066 /* TTTrackCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTTrackCollectionViewCell.swift; sourceTree = "<group>"; };
+		FF2250181D311AC5002D0066 /* TTSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTSegue.swift; sourceTree = "<group>"; };
+		FF22501A1D329D0D002D0066 /* NowPlayingNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayingNavigationController.swift; sourceTree = "<group>"; };
+		FF22501F1D33789B002D0066 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = TobyTunes/Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		FF2250211D337D33002D0066 /* GenresViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenresViewController.swift; sourceTree = "<group>"; };
+		FF2250231D338086002D0066 /* TTGenreCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTGenreCollectionViewCell.swift; sourceTree = "<group>"; };
+		FF2250251D342CAD002D0066 /* TTCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
+		FF2250271D379558002D0066 /* MusicLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicLibrary.swift; sourceTree = "<group>"; };
+		FF2250291D38E35C002D0066 /* Bookmarks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bookmarks.swift; sourceTree = "<group>"; };
+		FF22502B1D38EA40002D0066 /* BookmarksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
+		FF22502D1D394BD7002D0066 /* TTBookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTBookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
+		FF23977D21A1B23600B00508 /* MarqueeLabel.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MarqueeLabel.xcodeproj; path = "MarqueeLabel-3.2.0/MarqueeLabel/MarqueeLabel.xcodeproj"; sourceTree = "<group>"; };
+		FF23978C21A1B3AD00B00508 /* MarqueeLabelSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MarqueeLabelSwift.swift; path = "MarqueeLabel-3.2.0/MarqueeLabelSwift/MarqueeLabelSwift/MarqueeLabelSwift.swift"; sourceTree = "<group>"; };
+		FF262CCF1D5A04CC00172036 /* AudioFilterTap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioFilterTap.h; sourceTree = "<group>"; };
+		FF262CD01D5A04CC00172036 /* AudioFilterTap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioFilterTap.m; sourceTree = "<group>"; };
+		FF51F5AC1D21BD0400637E58 /* TTAlbumsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTAlbumsCollectionViewCell.swift; sourceTree = "<group>"; };
+		FF51F5AE1D226AC300637E58 /* TTTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTTabBarController.swift; sourceTree = "<group>"; };
+		FF5BF6E61D4227DA00050B55 /* TobyTunes-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TobyTunes-Bridging-Header.h"; sourceTree = "<group>"; };
+		FF5BF6E71D4227DA00050B55 /* RZCollectionTableView_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RZCollectionTableView_Private.h; path = RZUtils/RZUtils/Components/RZCollectionTableView/RZCollectionTableView_Private.h; sourceTree = "<group>"; };
+		FF5BF6E81D4227DA00050B55 /* RZCollectionTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RZCollectionTableView.h; path = RZUtils/RZUtils/Components/RZCollectionTableView/RZCollectionTableView.h; sourceTree = "<group>"; };
+		FF5BF6E91D4227DA00050B55 /* RZCollectionTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RZCollectionTableView.m; path = RZUtils/RZUtils/Components/RZCollectionTableView/RZCollectionTableView.m; sourceTree = "<group>"; };
+		FF5BF6EA1D4227DA00050B55 /* RZCollectionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RZCollectionTableViewCell.h; path = RZUtils/RZUtils/Components/RZCollectionTableView/RZCollectionTableViewCell.h; sourceTree = "<group>"; };
+		FF5BF6EB1D4227DB00050B55 /* RZCollectionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RZCollectionTableViewCell.m; path = RZUtils/RZUtils/Components/RZCollectionTableView/RZCollectionTableViewCell.m; sourceTree = "<group>"; };
+		FF6D00061D1AE2FE004CB9F5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FF6D00091D1AE2FE004CB9F5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		FF6D000B1D1AE2FE004CB9F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FF6D00101D1AE2FE004CB9F5 /* TobyTunesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TobyTunesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FF6D00141D1AE2FE004CB9F5 /* TobyTunesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TobyTunesUITests.swift; sourceTree = "<group>"; };
+		FF6D00161D1AE2FE004CB9F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FF6DFFFA1D1AE2FE004CB9F5 /* TobyTunes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TobyTunes.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FF7434E51D547080005AD50B /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		FF7434E71D569BE2005AD50B /* ObserverPattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObserverPattern.swift; sourceTree = "<group>"; };
+		FF87CA281D1AE3D3001A5945 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
+		FF87CA291D1AE3D3001A5945 /* AlbumsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumsViewController.swift; sourceTree = "<group>"; };
+		FF87CA2A1D1AE3D3001A5945 /* AlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumViewController.swift; sourceTree = "<group>"; };
+		FF87CA2B1D1AE3D3001A5945 /* ALVolumeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALVolumeView.swift; sourceTree = "<group>"; };
+		FF87CA2C1D1AE3D3001A5945 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FF87CA2D1D1AE3D3001A5945 /* ArtistsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistsViewController.swift; sourceTree = "<group>"; };
+		FF87CA2E1D1AE3D3001A5945 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		FF87CA311D1AE3D3001A5945 /* NowPlayingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayingViewController.swift; sourceTree = "<group>"; };
+		FF87CA331D1AE3D3001A5945 /* UIImage+Margins.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Margins.swift"; sourceTree = "<group>"; };
+		FF87CA341D1AE3D3001A5945 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FF6D000D1D1AE2FE004CB9F5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FF6DFFF71D1AE2FE004CB9F5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FF23978B21A1B37500B00508 /* MarqueeLabel.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FF23977E21A1B23600B00508 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FF23978321A1B23600B00508 /* MarqueeLabelDemo.app */,
+				FF23978521A1B23600B00508 /* MarqueeLabel.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FF23978A21A1B37500B00508 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FF5BF6EE1D4227E300050B55 /* RZUtils */ = {
+			isa = PBXGroup;
+			children = (
+				FF5BF6E71D4227DA00050B55 /* RZCollectionTableView_Private.h */,
+				FF5BF6E81D4227DA00050B55 /* RZCollectionTableView.h */,
+				FF5BF6E91D4227DA00050B55 /* RZCollectionTableView.m */,
+				FF5BF6EA1D4227DA00050B55 /* RZCollectionTableViewCell.h */,
+				FF5BF6EB1D4227DB00050B55 /* RZCollectionTableViewCell.m */,
+			);
+			name = RZUtils;
+			sourceTree = "<group>";
+		};
+		FF6D00131D1AE2FE004CB9F5 /* TobyTunesUITests */ = {
+			isa = PBXGroup;
+			children = (
+				FF6D00141D1AE2FE004CB9F5 /* TobyTunesUITests.swift */,
+				FF6D00161D1AE2FE004CB9F5 /* Info.plist */,
+			);
+			path = TobyTunesUITests;
+			sourceTree = "<group>";
+		};
+		FF6DFFF11D1AE2FE004CB9F5 = {
+			isa = PBXGroup;
+			children = (
+				FF23977D21A1B23600B00508 /* MarqueeLabel.xcodeproj */,
+				FF5BF6EE1D4227E300050B55 /* RZUtils */,
+				FF87CA441D1AE50E001A5945 /* MarqueeLabel */,
+				FF6DFFFC1D1AE2FE004CB9F5 /* TobyTunes */,
+				FF6D00131D1AE2FE004CB9F5 /* TobyTunesUITests */,
+				FF6DFFFB1D1AE2FE004CB9F5 /* Products */,
+				FF5BF6E61D4227DA00050B55 /* TobyTunes-Bridging-Header.h */,
+				FF23978A21A1B37500B00508 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		FF6DFFFB1D1AE2FE004CB9F5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FF6DFFFA1D1AE2FE004CB9F5 /* TobyTunes.app */,
+				FF6D00101D1AE2FE004CB9F5 /* TobyTunesUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FF6DFFFC1D1AE2FE004CB9F5 /* TobyTunes */ = {
+			isa = PBXGroup;
+			children = (
+				FFFDA18B1D5B54F80080D3B4 /* Audio */,
+				FFFDA1891D5B54590080D3B4 /* Helpers */,
+				FFFDA1881D5B54470080D3B4 /* ViewControllers */,
+				FF2250291D38E35C002D0066 /* Bookmarks.swift */,
+				FF87CA2C1D1AE3D3001A5945 /* AppDelegate.swift */,
+				FF22501E1D33789B002D0066 /* Main.storyboard */,
+				FF6D00061D1AE2FE004CB9F5 /* Assets.xcassets */,
+				FF6D00081D1AE2FE004CB9F5 /* LaunchScreen.storyboard */,
+				FF6D000B1D1AE2FE004CB9F5 /* Info.plist */,
+			);
+			path = TobyTunes;
+			sourceTree = "<group>";
+		};
+		FF87CA441D1AE50E001A5945 /* MarqueeLabel */ = {
+			isa = PBXGroup;
+			children = (
+				FF23978C21A1B3AD00B00508 /* MarqueeLabelSwift.swift */,
+			);
+			name = MarqueeLabel;
+			sourceTree = "<group>";
+		};
+		FFFDA1881D5B54470080D3B4 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				FFFDA18A1D5B54A10080D3B4 /* Cells */,
+				FF2250211D337D33002D0066 /* GenresViewController.swift */,
+				FF87CA2D1D1AE3D3001A5945 /* ArtistsViewController.swift */,
+				FF87CA291D1AE3D3001A5945 /* AlbumsViewController.swift */,
+				FF87CA2A1D1AE3D3001A5945 /* AlbumViewController.swift */,
+				FF22502B1D38EA40002D0066 /* BookmarksViewController.swift */,
+				FF87CA281D1AE3D3001A5945 /* AboutViewController.swift */,
+				FF87CA311D1AE3D3001A5945 /* NowPlayingViewController.swift */,
+				FF22501A1D329D0D002D0066 /* NowPlayingNavigationController.swift */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		FFFDA1891D5B54590080D3B4 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				FF87CA2E1D1AE3D3001A5945 /* Constants.swift */,
+				FF7434E71D569BE2005AD50B /* ObserverPattern.swift */,
+				FF87CA341D1AE3D3001A5945 /* Utilities.swift */,
+				FF87CA331D1AE3D3001A5945 /* UIImage+Margins.swift */,
+				FF2250181D311AC5002D0066 /* TTSegue.swift */,
+				FF51F5AE1D226AC300637E58 /* TTTabBarController.swift */,
+				FF2250251D342CAD002D0066 /* TTCollectionViewFlowLayout.swift */,
+				FF87CA2B1D1AE3D3001A5945 /* ALVolumeView.swift */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
+		FFFDA18A1D5B54A10080D3B4 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				FF2250231D338086002D0066 /* TTGenreCollectionViewCell.swift */,
+				FF2250141D2F90C6002D0066 /* TTArtistsCollectionViewCell.swift */,
+				FF51F5AC1D21BD0400637E58 /* TTAlbumsCollectionViewCell.swift */,
+				FF2250161D2FBBC1002D0066 /* TTTrackCollectionViewCell.swift */,
+				FF22502D1D394BD7002D0066 /* TTBookmarkCollectionViewCell.swift */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
+		FFFDA18B1D5B54F80080D3B4 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				FF2250271D379558002D0066 /* MusicLibrary.swift */,
+				FF7434E51D547080005AD50B /* Player.swift */,
+				FF262CCF1D5A04CC00172036 /* AudioFilterTap.h */,
+				FF262CD01D5A04CC00172036 /* AudioFilterTap.m */,
+			);
+			name = Audio;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FF6D000F1D1AE2FE004CB9F5 /* TobyTunesUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FF6D001C1D1AE2FE004CB9F5 /* Build configuration list for PBXNativeTarget "TobyTunesUITests" */;
+			buildPhases = (
+				FF6D000C1D1AE2FE004CB9F5 /* Sources */,
+				FF6D000D1D1AE2FE004CB9F5 /* Frameworks */,
+				FF6D000E1D1AE2FE004CB9F5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FF6D00121D1AE2FE004CB9F5 /* PBXTargetDependency */,
+			);
+			name = TobyTunesUITests;
+			productName = TobyTunesUITests;
+			productReference = FF6D00101D1AE2FE004CB9F5 /* TobyTunesUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		FF6DFFF91D1AE2FE004CB9F5 /* TobyTunes */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FF6D00191D1AE2FE004CB9F5 /* Build configuration list for PBXNativeTarget "TobyTunes" */;
+			buildPhases = (
+				FF6DFFF61D1AE2FE004CB9F5 /* Sources */,
+				FF6DFFF71D1AE2FE004CB9F5 /* Frameworks */,
+				FF6DFFF81D1AE2FE004CB9F5 /* Resources */,
+				FFBF461621A1F2C9002766DD /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FFBF460F21A1F12B002766DD /* PBXTargetDependency */,
+				FFBF461521A1F2C9002766DD /* PBXTargetDependency */,
+			);
+			name = TobyTunes;
+			productName = TobyTunes;
+			productReference = FF6DFFFA1D1AE2FE004CB9F5 /* TobyTunes.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FF6DFFF21D1AE2FE004CB9F5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "Agent Lobster";
+				TargetAttributes = {
+					FF6D000F1D1AE2FE004CB9F5 = {
+						CreatedOnToolsVersion = 7.3.1;
+						TestTargetID = FF6DFFF91D1AE2FE004CB9F5;
+					};
+					FF6DFFF91D1AE2FE004CB9F5 = {
+						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 97V36B3QYK;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = FF6DFFF51D1AE2FE004CB9F5 /* Build configuration list for PBXProject "TobyTunes" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FF6DFFF11D1AE2FE004CB9F5;
+			productRefGroup = FF6DFFFB1D1AE2FE004CB9F5 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = FF23977E21A1B23600B00508 /* Products */;
+					ProjectRef = FF23977D21A1B23600B00508 /* MarqueeLabel.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				FF6DFFF91D1AE2FE004CB9F5 /* TobyTunes */,
+				FF6D000F1D1AE2FE004CB9F5 /* TobyTunesUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		FF23978321A1B23600B00508 /* MarqueeLabelDemo.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = MarqueeLabelDemo.app;
+			remoteRef = FF23978221A1B23600B00508 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF23978521A1B23600B00508 /* MarqueeLabel.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MarqueeLabel.framework;
+			remoteRef = FF23978421A1B23600B00508 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FF6D000E1D1AE2FE004CB9F5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FF6DFFF81D1AE2FE004CB9F5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FF6D000A1D1AE2FE004CB9F5 /* LaunchScreen.storyboard in Resources */,
+				FF6D00071D1AE2FE004CB9F5 /* Assets.xcassets in Resources */,
+				FF2250201D33789B002D0066 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FF6D000C1D1AE2FE004CB9F5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FF6D00151D1AE2FE004CB9F5 /* TobyTunesUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FF6DFFF61D1AE2FE004CB9F5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FF2250221D337D33002D0066 /* GenresViewController.swift in Sources */,
+				FF87CA3A1D1AE3D3001A5945 /* ArtistsViewController.swift in Sources */,
+				FF87CA411D1AE3D3001A5945 /* Utilities.swift in Sources */,
+				FF2250281D379558002D0066 /* MusicLibrary.swift in Sources */,
+				FF23978E21A1B3AD00B00508 /* MarqueeLabelSwift.swift in Sources */,
+				FF87CA391D1AE3D3001A5945 /* AppDelegate.swift in Sources */,
+				FF5BF6EC1D4227DB00050B55 /* RZCollectionTableView.m in Sources */,
+				FF7434E81D569BE2005AD50B /* ObserverPattern.swift in Sources */,
+				FF87CA371D1AE3D3001A5945 /* AlbumViewController.swift in Sources */,
+				FF87CA351D1AE3D3001A5945 /* AboutViewController.swift in Sources */,
+				FF2250241D338086002D0066 /* TTGenreCollectionViewCell.swift in Sources */,
+				FF51F5AD1D21BD0400637E58 /* TTAlbumsCollectionViewCell.swift in Sources */,
+				FF51F5AF1D226AC300637E58 /* TTTabBarController.swift in Sources */,
+				FF2250151D2F90C6002D0066 /* TTArtistsCollectionViewCell.swift in Sources */,
+				FF87CA361D1AE3D3001A5945 /* AlbumsViewController.swift in Sources */,
+				FF87CA3E1D1AE3D3001A5945 /* NowPlayingViewController.swift in Sources */,
+				FF22502A1D38E35C002D0066 /* Bookmarks.swift in Sources */,
+				FF2250171D2FBBC1002D0066 /* TTTrackCollectionViewCell.swift in Sources */,
+				FF87CA401D1AE3D3001A5945 /* UIImage+Margins.swift in Sources */,
+				FF2250191D311AC5002D0066 /* TTSegue.swift in Sources */,
+				FF5BF6ED1D4227DB00050B55 /* RZCollectionTableViewCell.m in Sources */,
+				FF22502E1D394BD7002D0066 /* TTBookmarkCollectionViewCell.swift in Sources */,
+				FF2250261D342CAD002D0066 /* TTCollectionViewFlowLayout.swift in Sources */,
+				FF87CA381D1AE3D3001A5945 /* ALVolumeView.swift in Sources */,
+				FF87CA3B1D1AE3D3001A5945 /* Constants.swift in Sources */,
+				FF22502C1D38EA40002D0066 /* BookmarksViewController.swift in Sources */,
+				FF7434E61D547080005AD50B /* Player.swift in Sources */,
+				FF22501B1D329D0D002D0066 /* NowPlayingNavigationController.swift in Sources */,
+				FF262CD11D5A04CC00172036 /* AudioFilterTap.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FF6D00121D1AE2FE004CB9F5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FF6DFFF91D1AE2FE004CB9F5 /* TobyTunes */;
+			targetProxy = FF6D00111D1AE2FE004CB9F5 /* PBXContainerItemProxy */;
+		};
+		FFBF460F21A1F12B002766DD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MarqueeLabel;
+			targetProxy = FFBF460E21A1F12B002766DD /* PBXContainerItemProxy */;
+		};
+		FFBF461521A1F2C9002766DD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MarqueeLabel;
+			targetProxy = FFBF461421A1F2C9002766DD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		FF22501E1D33789B002D0066 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF22501F1D33789B002D0066 /* Base */,
+			);
+			name = Main.storyboard;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		FF6D00081D1AE2FE004CB9F5 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF6D00091D1AE2FE004CB9F5 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		FF6D00171D1AE2FE004CB9F5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Toby Nelson (97V36B3QYK)";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "fa24825a-5871-4470-bb67-9087486e4b63";
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FF6D00181D1AE2FE004CB9F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Toby Nelson (97V36B3QYK)";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "fa24825a-5871-4470-bb67-9087486e4b63";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FF6D001A1D1AE2FE004CB9F5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = TobyTunes/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.agentlobster.tobytunes;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "TobyTunes-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		FF6D001B1D1AE2FE004CB9F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GCC_OPTIMIZATION_LEVEL = s;
+				INFOPLIST_FILE = TobyTunes/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.agentlobster.tobytunes;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "TobyTunes-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		FF6D001D1D1AE2FE004CB9F5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = TobyTunesUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = AgentLobster.TobyTunesUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = TobyTunes;
+			};
+			name = Debug;
+		};
+		FF6D001E1D1AE2FE004CB9F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = TobyTunesUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = AgentLobster.TobyTunesUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = TobyTunes;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FF6D00191D1AE2FE004CB9F5 /* Build configuration list for PBXNativeTarget "TobyTunes" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FF6D001A1D1AE2FE004CB9F5 /* Debug */,
+				FF6D001B1D1AE2FE004CB9F5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FF6D001C1D1AE2FE004CB9F5 /* Build configuration list for PBXNativeTarget "TobyTunesUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FF6D001D1D1AE2FE004CB9F5 /* Debug */,
+				FF6D001E1D1AE2FE004CB9F5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FF6DFFF51D1AE2FE004CB9F5 /* Build configuration list for PBXProject "TobyTunes" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FF6D00171D1AE2FE004CB9F5 /* Debug */,
+				FF6D00181D1AE2FE004CB9F5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FF6DFFF21D1AE2FE004CB9F5 /* Project object */;
+}
