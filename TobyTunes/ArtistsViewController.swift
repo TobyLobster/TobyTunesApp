@@ -228,7 +228,7 @@ class ArtistsViewController: UICollectionViewController, UICollectionViewDelegat
         if !registeredForNotifications {
             let notificationCenter = NotificationCenter.default
             notificationCenter.addObserver(self, selector: #selector(musicLibraryUpdated),  name: NSNotification.Name.MPMediaLibraryDidChange, object: nil)
-            notificationCenter.addObserver(self, selector: #selector(changedTextSize), name: NSNotification.Name.UIContentSizeCategoryDidChange, object:nil)
+            notificationCenter.addObserver(self, selector: #selector(changedTextSize), name: UIContentSizeCategory.didChangeNotification, object:nil)
             MPMediaLibrary.default().beginGeneratingLibraryChangeNotifications()
             registeredForNotifications = true
         }
@@ -237,21 +237,21 @@ class ArtistsViewController: UICollectionViewController, UICollectionViewDelegat
     func unregisterForNotifications() {
         if registeredForNotifications {
             let notificationCenter = NotificationCenter.default
-            notificationCenter.removeObserver(self, name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
+            notificationCenter.removeObserver(self, name: UIContentSizeCategory.didChangeNotification, object: nil)
             notificationCenter.removeObserver(self, name: NSNotification.Name.MPMediaLibraryDidChange, object: nil)
             MPMediaLibrary.default().endGeneratingLibraryChangeNotifications()
             registeredForNotifications = false
         }
     }
 
-    func musicLibraryUpdated() {
+    @objc func musicLibraryUpdated() {
         artistsData = MusicLibrary.getArtistsData(genreTitle: genreTitle)
         collectionView?.reloadData()
         currentlyPlayingDataIndex = -1
         updatePlaybackItemUI()
     }
 
-    func changedTextSize() {
+    @objc func changedTextSize() {
         collectionView?.reloadData()
     }
 

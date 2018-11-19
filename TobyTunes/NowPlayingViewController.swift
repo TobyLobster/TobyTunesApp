@@ -49,14 +49,14 @@ class NowPlayingViewController: UIViewController, Subscriber {
 
     override func viewDidLoad() {
         self.title = songTitle
-        let backButton = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target:self, action: #selector(back))
+        let backButton = UIBarButtonItem(title: "Back", style: UIBarButtonItem.Style.plain, target:self, action: #selector(back))
         self.navigationItem.leftBarButtonItem = backButton
 
         // Volume view
         volumeViewParent?.backgroundColor = UIColor.clear
         progressSlider?.setThumbImage(thumbImage, for: [])
         let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(changedTextSize), name: NSNotification.Name.UIContentSizeCategoryDidChange, object:nil)
+        notificationCenter.addObserver(self, selector: #selector(changedTextSize), name: UIContentSizeCategory.didChangeNotification, object:nil)
 
         // gestures for fast forwards and backwards in a track
         forwardsButton?.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(longPressForwards)))
@@ -70,20 +70,20 @@ class NowPlayingViewController: UIViewController, Subscriber {
         Player.sharedInstance.subscribe(subscriber: self)
     }
 
-    func changedTextSize() {
+    @objc func changedTextSize() {
         self.titleLabel?.font           = Utilities.fontSized(originalSize: 17)
         self.albumLabel?.font           = Utilities.fontSized(originalSize: 17)
         self.artistLabel?.font          = Utilities.fontSized(originalSize: 17)
         self.timeElapsedLabel?.font     = Utilities.fontSized(originalSize: 17)
         self.timeRemainingLabel?.font   = Utilities.fontSized(originalSize: 17)
         let myString: NSString = "Xg" as NSString
-        let size = myString.size(attributes: [NSFontAttributeName: Utilities.fontSized(originalSize: 17)!])
+        let size = myString.size(withAttributes: convertToOptionalNSAttributedStringKeyDictionary([convertFromNSAttributedStringKey(NSAttributedString.Key.font): Utilities.fontSized(originalSize: 17)!]))
         let adjustedSize = CGSize(width: CGFloat(ceilf(Float(size.width))), height: CGFloat(ceilf(Float(size.height))))
 
         titleHeightConstraint?.constant = CGFloat(3.0 * adjustedSize.height + 6.0)
     }
 
-    func back() {
+    @objc func back() {
         self.navigationController?.popViewController(animated: true)
         self.tabBarController?.selectedIndex = fromTabIndex
     }
@@ -150,19 +150,19 @@ class NowPlayingViewController: UIViewController, Subscriber {
 
     func registerOrientationChangeNotifications() {
         let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(orientationChanged), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(orientationChanged), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
 
     func unregisterOrientationChangeNotifications() {
         let notificationCenter = NotificationCenter.default
-        notificationCenter.removeObserver(self, name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        notificationCenter.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
     }
 
-    func musicLibraryUpdated() {
+    @objc func musicLibraryUpdated() {
         updateCurrentTrackUI()
     }
 
-    func orientationChanged( notification: NSNotification ) {
+    @objc func orientationChanged( notification: NSNotification ) {
         if let volumeViewParent = volumeViewParent {
             Utilities.delay(delay: 0.1) {
                 self.volumeView?.frame = volumeViewParent.bounds
@@ -243,21 +243,21 @@ class NowPlayingViewController: UIViewController, Subscriber {
                     }
                     titleLabel?.marqueeType = .MLContinuous
                     titleLabel?.scrollDuration = 6
-                    titleLabel?.animationCurve = UIViewAnimationOptions.curveLinear
+                    titleLabel?.animationCurve = UIView.AnimationOptions.curveLinear
                     titleLabel?.fadeLength = 0.0
                     titleLabel?.animationDelay = 3.0
                     titleLabel?.trailingBuffer = 50.0
 
                     albumLabel?.marqueeType = .MLContinuous
                     albumLabel?.scrollDuration = 6
-                    albumLabel?.animationCurve = UIViewAnimationOptions.curveLinear
+                    albumLabel?.animationCurve = UIView.AnimationOptions.curveLinear
                     albumLabel?.fadeLength = 0.0
                     albumLabel?.animationDelay = 3.0
                     albumLabel?.trailingBuffer = 50.0
 
                     artistLabel?.marqueeType = .MLContinuous
                     artistLabel?.scrollDuration = 6
-                    artistLabel?.animationCurve = UIViewAnimationOptions.curveLinear
+                    artistLabel?.animationCurve = UIView.AnimationOptions.curveLinear
                     artistLabel?.fadeLength = 0.0
                     artistLabel?.animationDelay = 3.0
                     artistLabel?.trailingBuffer = 50.0
@@ -393,7 +393,7 @@ class NowPlayingViewController: UIViewController, Subscriber {
         }
     }
 
-    func imageTap(recognizer: UITapGestureRecognizer) {
+    @objc func imageTap(recognizer: UITapGestureRecognizer) {
         playPause()
 
         var image: UIImage? = nil
@@ -417,7 +417,7 @@ class NowPlayingViewController: UIViewController, Subscriber {
         playPause()
     }
 
-    func longPressForwards(recognizer: UILongPressGestureRecognizer) {
+    @objc func longPressForwards(recognizer: UILongPressGestureRecognizer) {
         if (recognizer.state == .began) {
             if pressingForward == false {
                 pressingForward = true
@@ -435,7 +435,7 @@ class NowPlayingViewController: UIViewController, Subscriber {
         }
     }
 
-    func longPressBackwards(recognizer: UILongPressGestureRecognizer) {
+    @objc func longPressBackwards(recognizer: UILongPressGestureRecognizer) {
         if (recognizer.state == .began) {
             if pressingBackward == false {
                 pressingBackward = true
@@ -578,4 +578,15 @@ class NowPlayingViewController: UIViewController, Subscriber {
         updateProgressUI(dragging: dragging)
         updatePlaybackStateUI()
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
 }

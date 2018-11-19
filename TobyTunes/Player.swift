@@ -126,7 +126,7 @@ class PlayingTrack {
 
         //print("tracks? \(playerItem.asset.tracks)\n")
 
-        let audioTrack = playerItem.asset.tracks(withMediaType: AVMediaTypeAudio).first!
+        let audioTrack = playerItem.asset.tracks(withMediaType: AVMediaType.audio).first!
         let inputParams = AVMutableAudioMixInputParameters(track: audioTrack)
         inputParams.audioTapProcessor = tap?.takeUnretainedValue()
 
@@ -148,7 +148,7 @@ class PlayingTrack {
         self.requestedSeekTime      = nil
         self.seekStartTime          = NSDate(timeIntervalSince1970: 0)
 
-        self.playerItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmTimeDomain
+        self.playerItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithm.timeDomain
         createAudioFilterForPlayerItem()
 
         // Add observers
@@ -162,7 +162,7 @@ class PlayingTrack {
                                                          object: self.playerItem)
 
         // Add update time code block - called every 0.5 seconds
-        self.timeObserver = self.avPlayer.addPeriodicTimeObserver(forInterval: CMTimeMake(1,2), queue: nil) { (time) in
+        self.timeObserver = self.avPlayer.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 1,timescale: 2), queue: nil) { (time) in
             self.observer?.updateProgress(time: time.seconds)
             } as Any
     }
@@ -177,7 +177,7 @@ class PlayingTrack {
 
         // Create new player item
         self.playerItem             = AVPlayerItem(url: URL)
-        self.playerItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmTimeDomain
+        self.playerItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithm.timeDomain
         createAudioFilterForPlayerItem()
 
         // Add notification to new player item
@@ -196,13 +196,13 @@ class PlayingTrack {
         self.avPlayer.replaceCurrentItem(with: self.playerItem)
 
         let status = self.avPlayer.status
-        if status == AVPlayerStatus.unknown {
+        if status == AVPlayer.Status.unknown {
             self.playbackReadinessState = .Initialising
         }
-        else if status == AVPlayerStatus.failed {
+        else if status == AVPlayer.Status.failed {
             self.playbackReadinessState = .Failed
         }
-        else if status == AVPlayerStatus.readyToPlay {
+        else if status == AVPlayer.Status.readyToPlay {
             self.playbackReadinessState = .Ready
         }
         self.playbackRequestedState = .Nothing
@@ -577,7 +577,7 @@ class Player : NSObject, Observer {
         }
     }
 
-    func playbackFinished() {
+    @objc func playbackFinished() {
         // Find next track in queue
         //print("track finished!")
 

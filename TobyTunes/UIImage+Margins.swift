@@ -95,7 +95,7 @@ extension UIImage {
         }
         else if self.ciImage != nil {
             let openGLContext = EAGLContext(api: .openGLES3)
-            let context = CIContext(eaglContext: openGLContext!, options:[kCIContextWorkingColorSpace: NSNull()])
+            let context = CIContext(eaglContext: openGLContext!, options:convertToOptionalCIContextOptionDictionary([convertFromCIContextOption(CIContextOption.workingColorSpace): NSNull()]))
             cgImage = context.createCGImage(self.ciImage!, from: rect)
         }
 
@@ -110,9 +110,20 @@ extension UIImage {
         let ciImageOpt = UIKit.CIImage(image: self)
         guard let ciImage = ciImageOpt else { return nil }
 
-        let blurred = ciImage.applyingFilter("CIGaussianBlur", withInputParameters: [kCIInputRadiusKey: 25.0])
-        let lowContrast = blurred.applyingFilter("CIColorControls", withInputParameters: [kCIInputContrastKey: 0.7, kCIInputBrightnessKey: 0.0, kCIInputSaturationKey: 1.0])
+        let blurred = ciImage.applyingFilter("CIGaussianBlur", parameters: [kCIInputRadiusKey: 25.0])
+        let lowContrast = blurred.applyingFilter("CIColorControls", parameters: [kCIInputContrastKey: 0.7, kCIInputBrightnessKey: 0.0, kCIInputSaturationKey: 1.0])
 
         return UIImage(ciImage: lowContrast).crop(rect: ciImage.extent)
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalCIContextOptionDictionary(_ input: [String: Any]?) -> [CIContextOption: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (CIContextOption(rawValue: key), value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromCIContextOption(_ input: CIContextOption) -> String {
+	return input.rawValue
 }

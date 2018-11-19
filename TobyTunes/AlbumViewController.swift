@@ -200,7 +200,7 @@ class AlbumViewController: UICollectionViewController, UICollectionViewDelegateF
         if !registeredForNotifications {
             let notificationCenter = NotificationCenter.default
             notificationCenter.addObserver(self, selector: #selector(musicLibraryUpdated),  name: NSNotification.Name.MPMediaLibraryDidChange, object: nil)
-            notificationCenter.addObserver(self, selector: #selector(changedTextSize), name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
+            notificationCenter.addObserver(self, selector: #selector(changedTextSize), name: UIContentSizeCategory.didChangeNotification, object: nil)
 
             MPMediaLibrary.default().beginGeneratingLibraryChangeNotifications()
             registeredForNotifications = true
@@ -210,7 +210,7 @@ class AlbumViewController: UICollectionViewController, UICollectionViewDelegateF
     func unregisterForNotifications() {
         if registeredForNotifications {
             let notificationCenter = NotificationCenter.default
-            notificationCenter.removeObserver(self, name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
+            notificationCenter.removeObserver(self, name: UIContentSizeCategory.didChangeNotification, object: nil)
             notificationCenter.removeObserver(self, name: NSNotification.Name.MPMediaLibraryDidChange, object: nil)
 
             MPMediaLibrary.default().endGeneratingLibraryChangeNotifications()
@@ -218,14 +218,14 @@ class AlbumViewController: UICollectionViewController, UICollectionViewDelegateF
         }
     }
 
-    func musicLibraryUpdated() {
+    @objc func musicLibraryUpdated() {
         singleAlbumData = MusicLibrary.getSingleAlbumData(genreTitle: genreTitle, artistTitle: artistTitle, albumTitle: albumTitle)
         collectionView?.reloadData()
         currentlyPlayingDataIndex = -1
         updatePlaybackItemUI()
     }
 
-    func changedTextSize() {
+    @objc func changedTextSize() {
         collectionView?.reloadData()
     }
 

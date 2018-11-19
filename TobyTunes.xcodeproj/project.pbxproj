@@ -28,7 +28,6 @@
 		FF5BF6ED1D4227DB00050B55 /* RZCollectionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FF5BF6EB1D4227DB00050B55 /* RZCollectionTableViewCell.m */; };
 		FF6D00071D1AE2FE004CB9F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF6D00061D1AE2FE004CB9F5 /* Assets.xcassets */; };
 		FF6D000A1D1AE2FE004CB9F5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF6D00081D1AE2FE004CB9F5 /* LaunchScreen.storyboard */; };
-		FF6D00151D1AE2FE004CB9F5 /* TobyTunesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6D00141D1AE2FE004CB9F5 /* TobyTunesUITests.swift */; };
 		FF7434E61D547080005AD50B /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7434E51D547080005AD50B /* Player.swift */; };
 		FF7434E81D569BE2005AD50B /* ObserverPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7434E71D569BE2005AD50B /* ObserverPattern.swift */; };
 		FF87CA351D1AE3D3001A5945 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF87CA281D1AE3D3001A5945 /* AboutViewController.swift */; };
@@ -58,13 +57,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = EAE4AC711CA8DCBB006C1ECC;
 			remoteInfo = MarqueeLabel;
-		};
-		FF6D00111D1AE2FE004CB9F5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF6DFFF21D1AE2FE004CB9F5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = FF6DFFF91D1AE2FE004CB9F5;
-			remoteInfo = TobyTunes;
 		};
 		FFBF460E21A1F12B002766DD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -124,9 +116,6 @@
 		FF6D00061D1AE2FE004CB9F5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FF6D00091D1AE2FE004CB9F5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FF6D000B1D1AE2FE004CB9F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FF6D00101D1AE2FE004CB9F5 /* TobyTunesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TobyTunesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		FF6D00141D1AE2FE004CB9F5 /* TobyTunesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TobyTunesUITests.swift; sourceTree = "<group>"; };
-		FF6D00161D1AE2FE004CB9F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FF6DFFFA1D1AE2FE004CB9F5 /* TobyTunes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TobyTunes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF7434E51D547080005AD50B /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		FF7434E71D569BE2005AD50B /* ObserverPattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObserverPattern.swift; sourceTree = "<group>"; };
@@ -143,13 +132,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		FF6D000D1D1AE2FE004CB9F5 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		FF6DFFF71D1AE2FE004CB9F5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -189,15 +171,6 @@
 			name = RZUtils;
 			sourceTree = "<group>";
 		};
-		FF6D00131D1AE2FE004CB9F5 /* TobyTunesUITests */ = {
-			isa = PBXGroup;
-			children = (
-				FF6D00141D1AE2FE004CB9F5 /* TobyTunesUITests.swift */,
-				FF6D00161D1AE2FE004CB9F5 /* Info.plist */,
-			);
-			path = TobyTunesUITests;
-			sourceTree = "<group>";
-		};
 		FF6DFFF11D1AE2FE004CB9F5 = {
 			isa = PBXGroup;
 			children = (
@@ -205,7 +178,6 @@
 				FF5BF6EE1D4227E300050B55 /* RZUtils */,
 				FF87CA441D1AE50E001A5945 /* MarqueeLabel */,
 				FF6DFFFC1D1AE2FE004CB9F5 /* TobyTunes */,
-				FF6D00131D1AE2FE004CB9F5 /* TobyTunesUITests */,
 				FF6DFFFB1D1AE2FE004CB9F5 /* Products */,
 				FF5BF6E61D4227DA00050B55 /* TobyTunes-Bridging-Header.h */,
 				FF23978A21A1B37500B00508 /* Frameworks */,
@@ -216,7 +188,6 @@
 			isa = PBXGroup;
 			children = (
 				FF6DFFFA1D1AE2FE004CB9F5 /* TobyTunes.app */,
-				FF6D00101D1AE2FE004CB9F5 /* TobyTunesUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -302,24 +273,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		FF6D000F1D1AE2FE004CB9F5 /* TobyTunesUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = FF6D001C1D1AE2FE004CB9F5 /* Build configuration list for PBXNativeTarget "TobyTunesUITests" */;
-			buildPhases = (
-				FF6D000C1D1AE2FE004CB9F5 /* Sources */,
-				FF6D000D1D1AE2FE004CB9F5 /* Frameworks */,
-				FF6D000E1D1AE2FE004CB9F5 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				FF6D00121D1AE2FE004CB9F5 /* PBXTargetDependency */,
-			);
-			name = TobyTunesUITests;
-			productName = TobyTunesUITests;
-			productReference = FF6D00101D1AE2FE004CB9F5 /* TobyTunesUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		FF6DFFF91D1AE2FE004CB9F5 /* TobyTunes */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = FF6D00191D1AE2FE004CB9F5 /* Build configuration list for PBXNativeTarget "TobyTunes" */;
@@ -350,13 +303,10 @@
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Agent Lobster";
 				TargetAttributes = {
-					FF6D000F1D1AE2FE004CB9F5 = {
-						CreatedOnToolsVersion = 7.3.1;
-						TestTargetID = FF6DFFF91D1AE2FE004CB9F5;
-					};
 					FF6DFFF91D1AE2FE004CB9F5 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = 97V36B3QYK;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -386,7 +336,6 @@
 			projectRoot = "";
 			targets = (
 				FF6DFFF91D1AE2FE004CB9F5 /* TobyTunes */,
-				FF6D000F1D1AE2FE004CB9F5 /* TobyTunesUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -409,13 +358,6 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
-		FF6D000E1D1AE2FE004CB9F5 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		FF6DFFF81D1AE2FE004CB9F5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -429,14 +371,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		FF6D000C1D1AE2FE004CB9F5 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FF6D00151D1AE2FE004CB9F5 /* TobyTunesUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		FF6DFFF61D1AE2FE004CB9F5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -476,11 +410,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		FF6D00121D1AE2FE004CB9F5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = FF6DFFF91D1AE2FE004CB9F5 /* TobyTunes */;
-			targetProxy = FF6D00111D1AE2FE004CB9F5 /* PBXContainerItemProxy */;
-		};
 		FFBF460F21A1F12B002766DD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = MarqueeLabel;
@@ -551,7 +480,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "fa24825a-5871-4470-bb67-9087486e4b63";
@@ -592,7 +521,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PROVISIONING_PROFILE = "fa24825a-5871-4470-bb67-9087486e4b63";
 				SDKROOT = iphoneos;
@@ -618,7 +547,8 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "TobyTunes-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -639,29 +569,8 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "TobyTunes-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 3.0;
-			};
-			name = Release;
-		};
-		FF6D001D1D1AE2FE004CB9F5 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = TobyTunesUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = AgentLobster.TobyTunesUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = TobyTunes;
-			};
-			name = Debug;
-		};
-		FF6D001E1D1AE2FE004CB9F5 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = TobyTunesUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = AgentLobster.TobyTunesUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = TobyTunes;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
@@ -673,15 +582,6 @@
 			buildConfigurations = (
 				FF6D001A1D1AE2FE004CB9F5 /* Debug */,
 				FF6D001B1D1AE2FE004CB9F5 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		FF6D001C1D1AE2FE004CB9F5 /* Build configuration list for PBXNativeTarget "TobyTunesUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				FF6D001D1D1AE2FE004CB9F5 /* Debug */,
-				FF6D001E1D1AE2FE004CB9F5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

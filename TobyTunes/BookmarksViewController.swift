@@ -141,15 +141,15 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDeleg
     @IBAction func handleCellPressed(sender: UIButton) {
         if let bookmark = Bookmarks.findMarkWithId(bookmarkId: sender.tag) {
             // Create the action sheet
-            let myActionSheet = UIAlertController(title: bookmark.playlist.title, message: bookmark.playlist.details, preferredStyle: UIAlertControllerStyle.actionSheet)
+            let myActionSheet = UIAlertController(title: bookmark.playlist.title, message: bookmark.playlist.details, preferredStyle: UIAlertController.Style.actionSheet)
             
             // Resume action button
-            let resumeAction = UIAlertAction(title: "Resume Playback", style: UIAlertActionStyle.default) { (action) in
+            let resumeAction = UIAlertAction(title: "Resume Playback", style: UIAlertAction.Style.default) { (action) in
                 self.performSegue(withIdentifier: "ResumePlayback", sender: sender)
             }
 
             // Play From Start action button
-            let restartAction = UIAlertAction(title: "Play From Start", style: UIAlertActionStyle.default) { (action) in
+            let restartAction = UIAlertAction(title: "Play From Start", style: UIAlertAction.Style.default) { (action) in
                 // Set bookmark back to start
                 Bookmarks.resetBookmark(bookmarkId: sender.tag)
 
@@ -158,7 +158,7 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDeleg
             }
 
             // Delete action button
-            let deleteAction = UIAlertAction(title: "Delete Bookmark", style: UIAlertActionStyle.default) { (action) in
+            let deleteAction = UIAlertAction(title: "Delete Bookmark", style: UIAlertAction.Style.default) { (action) in
                 // Remove data item
                 if let index = Bookmarks.removeBookmark(bookmarkId: sender.tag) {
                     //self.bookmarkData = Bookmarks.getBookmarkData()
@@ -171,7 +171,7 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDeleg
             }
 
             // cancel action button
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { (action) in
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) { (action) in
                 // Do Nothing
             }
             // add action buttons to action sheet
@@ -279,7 +279,7 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDeleg
         if !registeredForNotifications {
             let notificationCenter = NotificationCenter.default
             notificationCenter.addObserver(self, selector: #selector(musicLibraryUpdated),  name: NSNotification.Name.MPMediaLibraryDidChange, object: nil)
-            notificationCenter.addObserver(self, selector: #selector(changedTextSize), name: NSNotification.Name.UIContentSizeCategoryDidChange, object:nil)
+            notificationCenter.addObserver(self, selector: #selector(changedTextSize), name: UIContentSizeCategory.didChangeNotification, object:nil)
 
             MPMediaLibrary.default().beginGeneratingLibraryChangeNotifications()
             registeredForNotifications = true
@@ -289,7 +289,7 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDeleg
     func unregisterForNotifications() {
         if registeredForNotifications {
             let notificationCenter = NotificationCenter.default
-            notificationCenter.removeObserver(self, name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
+            notificationCenter.removeObserver(self, name: UIContentSizeCategory.didChangeNotification, object: nil)
             notificationCenter.removeObserver(self, name: NSNotification.Name.MPMediaLibraryDidChange, object: nil)
 
             MPMediaLibrary.default().endGeneratingLibraryChangeNotifications()
@@ -297,13 +297,13 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDeleg
         }
     }
 
-    func musicLibraryUpdated() {
+    @objc func musicLibraryUpdated() {
         //bookmarkData = Bookmarks.getBookmarkData()
         collectionView?.reloadData()
         updatePlaybackItemUI()
     }
 
-    func changedTextSize() {
+    @objc func changedTextSize() {
         collectionView?.reloadData()
     }
 
