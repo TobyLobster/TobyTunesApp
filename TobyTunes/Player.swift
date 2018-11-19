@@ -63,7 +63,7 @@ class PlayingTrack {
     var playbackRequestedState: PlaybackRequestedState
     var seekingState: PlaybackSeekingState
     weak var observer: Player?
-    var timeObserver: AnyObject?
+    var timeObserver: Any?
     var requestedSeekTime: Double?
     var seekStartTime: NSDate
 
@@ -164,7 +164,7 @@ class PlayingTrack {
         // Add update time code block - called every 0.5 seconds
         self.timeObserver = self.avPlayer.addPeriodicTimeObserver(forInterval: CMTimeMake(1,2), queue: nil) { (time) in
             self.observer?.updateProgress(time: time.seconds)
-            } as AnyObject
+            } as Any
     }
 
     func replaceURL(URL: URL, persistentID: UInt64) {

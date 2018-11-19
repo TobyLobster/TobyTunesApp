@@ -165,19 +165,19 @@ struct Utilities {
         return UIFont.boldSystemFont(ofSize: CGFloat(fontSize))
     }
 
-    static func textTitleAttributes() -> [String : AnyObject] {
+    static func textTitleAttributes() -> [String : Any] {
         let style = NSMutableParagraphStyle()
         style.headIndent = 0
-        return [NSFontAttributeName: Utilities.fontSized(originalSize: 17)! as AnyObject, NSParagraphStyleAttributeName: style]
+        return [NSFontAttributeName: Utilities.fontSized(originalSize: 17)! as Any, NSParagraphStyleAttributeName: style]
     }
 
-    static func textDetailsAttributes() -> [String : AnyObject] {
+    static func textDetailsAttributes() -> [String : Any] {
         let style = NSMutableParagraphStyle()
         style.headIndent = 0
-        return [NSFontAttributeName: Utilities.fontSized(originalSize: 15)! as AnyObject, NSParagraphStyleAttributeName: style]
+        return [NSFontAttributeName: Utilities.fontSized(originalSize: 15)! as Any, NSParagraphStyleAttributeName: style]
     }
 
-    static func measureText(text: String, attributes: [String : AnyObject], width: CGFloat = CGFloat.greatestFiniteMagnitude) -> CGSize {
+    static func measureText(text: String, attributes: [String : Any], width: CGFloat = CGFloat.greatestFiniteMagnitude) -> CGSize {
         let attributedText = NSAttributedString(string: text, attributes: attributes)
         let textRect = attributedText.boundingRect( with: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude),
                                                     options: [.usesLineFragmentOrigin, .usesFontLeading],
