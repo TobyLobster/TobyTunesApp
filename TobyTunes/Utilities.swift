@@ -168,17 +168,17 @@ struct Utilities {
     static func textTitleAttributes() -> [String : Any] {
         let style = NSMutableParagraphStyle()
         style.headIndent = 0
-        return [NSFontAttributeName: Utilities.fontSized(originalSize: 17)! as Any, NSParagraphStyleAttributeName: style]
+        return [convertFromNSAttributedStringKey(NSAttributedString.Key.font): Utilities.fontSized(originalSize: 17)! as Any, convertFromNSAttributedStringKey(NSAttributedString.Key.paragraphStyle): style]
     }
 
     static func textDetailsAttributes() -> [String : Any] {
         let style = NSMutableParagraphStyle()
         style.headIndent = 0
-        return [NSFontAttributeName: Utilities.fontSized(originalSize: 15)! as Any, NSParagraphStyleAttributeName: style]
+        return [convertFromNSAttributedStringKey(NSAttributedString.Key.font): Utilities.fontSized(originalSize: 15)! as Any, convertFromNSAttributedStringKey(NSAttributedString.Key.paragraphStyle): style]
     }
 
     static func measureText(text: String, attributes: [String : Any], width: CGFloat = CGFloat.greatestFiniteMagnitude) -> CGSize {
-        let attributedText = NSAttributedString(string: text, attributes: attributes)
+        let attributedText = NSAttributedString(string: text, attributes: convertToOptionalNSAttributedStringKeyDictionary(attributes))
         let textRect = attributedText.boundingRect( with: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude),
                                                     options: [.usesLineFragmentOrigin, .usesFontLeading],
                                                             context: nil )
@@ -428,4 +428,15 @@ struct Utilities {
         }
         return genre!
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }
