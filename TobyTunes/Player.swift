@@ -282,10 +282,8 @@ class PlayingTrack {
         self.seekStartTime = NSDate()
         //playerItem.asset.duration.timescale
         avPlayer.seek(to: CMTime(seconds: time, preferredTimescale: 600)) { (finished) in
-            if finished {
-                DispatchQueue.main.async {
-                    self.stopSeeking()
-                }
+            DispatchQueue.main.async {
+                self.stopSeeking()
             }
         }
     }
@@ -640,6 +638,7 @@ class Player : NSObject, Observer {
             }
         }
     }
+    
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)
     {
         if context == &PlayingTrack.statusContext {
