@@ -148,6 +148,7 @@ class PlayingTrack {
         self.requestedSeekTime      = nil
         self.seekStartTime          = NSDate(timeIntervalSince1970: 0)
 
+        // DEBUG: Turn off special audio filtering
         self.playerItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithm.timeDomain
         createAudioFilterForPlayerItem()
 
@@ -157,9 +158,9 @@ class PlayingTrack {
 
         // Add notification
         NotificationCenter.default.addObserver(observer,
-                                                         selector: #selector(Player.playbackFinished),
-                                                         name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
-                                                         object: self.playerItem)
+                                               selector: #selector(Player.playbackFinished),
+                                               name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+                                               object: self.playerItem)
 
         // Add update time code block - called every 0.5 seconds
         self.timeObserver = self.avPlayer.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 1,timescale: 2), queue: nil) { (time) in
@@ -172,7 +173,7 @@ class PlayingTrack {
         if let observer = self.observer {
             NotificationCenter.default.removeObserver(observer,
                                                       name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
-                                                              object: self.playerItem)
+                                                      object: self.playerItem)
         }
 
         // Create new player item

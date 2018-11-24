@@ -15,10 +15,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var isUIActive = true
 
-    private func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: Any]?) -> Bool {
-
+    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, mode: AVAudioSession.Mode.default)
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback,
+                                                            mode: AVAudioSession.Mode.default,
+                                                            options: [AVAudioSession.CategoryOptions.defaultToSpeaker,
+                                                                      AVAudioSession.CategoryOptions.allowAirPlay,
+                                                                      AVAudioSession.CategoryOptions.allowBluetooth,
+                                                                      AVAudioSession.CategoryOptions.allowBluetoothA2DP] )
+            try AVAudioSession.sharedInstance().setActive(true)
         } catch let error as NSError {
             print(error.description)
         }
@@ -118,9 +123,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-}
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertFromAVAudioSessionCategory(_ input: AVAudioSession.Category) -> String {
-	return input.rawValue
 }
