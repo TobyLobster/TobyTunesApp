@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="kxQ-w6-Pvc">
-    <device id="retina4_7" orientation="portrait">
+    <device id="ipad9_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -15,7 +15,7 @@
                 <navigationController title="Now Playing" id="rfE-jo-raK" userLabel="Now Playing" customClass="NowPlayingNavigationController" customModule="TobyTunes" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" tag="1004" title="Now Playing" image="nowplaying" id="L0o-q2-OJg" userLabel="Now Playing"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Glg-6P-B2k" userLabel="Now Playing">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="768" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <connections>
                             <outlet property="delegate" destination="rfE-jo-raK" id="kL9-Vw-i9z"/>
@@ -38,7 +38,7 @@
                 <navigationController title="Now Playing" id="Tpg-Ez-3UH" userLabel="Bookmarks" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" tag="1004" title="Bookmarks" image="bookmarks" id="S71-Pt-Is9" userLabel="Now Playing"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="QBn-cA-OKK" userLabel="Now Playing">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="768" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <connections>
                             <outlet property="delegate" destination="Tpg-Ez-3UH" id="WKt-2h-5o4"/>
@@ -64,14 +64,14 @@
                         <viewControllerLayoutGuide type="bottom" id="Djb-ko-YwX"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="QS5-Rx-YEW">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VzB-bk-Qsx" userLabel="Title View">
-                                <rect key="frame" x="16" y="20" width="343" height="117"/>
+                                <rect key="frame" x="20" y="20" width="728" height="117"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="bUw-GC-c7w">
-                                        <rect key="frame" x="18" y="0.0" width="117" height="117"/>
+                                        <rect key="frame" x="210.5" y="0.0" width="117" height="117"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="117" id="9d1-If-0mJ"/>
                                             <constraint firstAttribute="width" constant="100" id="Ufg-PD-K92"/>
@@ -87,19 +87,19 @@
                                         </variation>
                                     </imageView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="by Toby Nelson " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NDk-cv-Gan">
-                                        <rect key="frame" x="134" y="55" width="175" height="18"/>
+                                        <rect key="frame" x="326.5" y="55" width="175" height="18"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" text="TobyTunes" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="zEq-FU-wV5">
-                                        <rect key="frame" x="134" y="10" width="175" height="42"/>
+                                        <rect key="frame" x="326.5" y="10" width="175" height="42"/>
                                         <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="36"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EL1-mP-rxt">
-                                        <rect key="frame" x="134" y="79" width="175" height="18"/>
+                                        <rect key="frame" x="326.5" y="79" width="175" height="18"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -140,10 +140,10 @@
                                 </variation>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Om0-cE-gxK" userLabel="Quiet Boost Box View">
-                                <rect key="frame" x="16" y="157" width="343" height="70"/>
+                                <rect key="frame" x="20" y="157" width="728" height="70"/>
                                 <subviews>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ZD8-6c-Pak">
-                                        <rect key="frame" x="101" y="32" width="236" height="31"/>
+                                        <rect key="frame" x="101" y="32" width="621" height="31"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="zWO-3R-T5a"/>
                                         </constraints>
@@ -157,7 +157,7 @@
                                         </connections>
                                     </slider>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Maximum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ckz-Kq-ank">
-                                        <rect key="frame" x="260" y="8" width="75" height="21"/>
+                                        <rect key="frame" x="645" y="8" width="75" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -273,10 +273,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rAY-gy-xZ2">
-                                <rect key="frame" x="0.0" y="64" width="600" height="587"/>
+                                <rect key="frame" x="0.0" y="70" width="600" height="580"/>
                             </imageView>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="zTg-OV-9Fj">
-                                <rect key="frame" x="18" y="513" width="564" height="31"/>
+                                <rect key="frame" x="18" y="512" width="564" height="31"/>
                                 <connections>
                                     <action selector="dragStartWithSender:" destination="fdh-GP-dNF" eventType="touchDown" id="sLc-i7-HSc"/>
                                     <action selector="dragStopWithSender:" destination="fdh-GP-dNF" eventType="touchUpOutside" id="bx2-m6-rIh"/>
@@ -287,14 +287,14 @@
                                 </connections>
                             </slider>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YW6-3f-FxH" userLabel="Volume Bar Parent View">
-                                <rect key="frame" x="55" y="617" width="485" height="34"/>
+                                <rect key="frame" x="55" y="616" width="485" height="34"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="34" id="Afr-1y-hJh"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LnD-bG-jHE" userLabel="Controls View">
-                                <rect key="frame" x="20" y="551" width="560" height="50"/>
+                                <rect key="frame" x="20" y="550" width="560" height="50"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AHi-JL-M8o" userLabel="Next Track Button">
                                         <rect key="frame" x="373" y="0.0" width="50" height="50"/>
@@ -385,7 +385,7 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lpv-bp-JiK">
-                                <rect key="frame" x="20" y="488" width="277" height="25"/>
+                                <rect key="frame" x="20" y="487" width="277" height="25"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="277" id="1hV-qV-fAL"/>
                                     <constraint firstAttribute="height" constant="25" id="SLp-h4-qIM"/>
@@ -395,7 +395,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-00:00:00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wRy-LW-2AW">
-                                <rect key="frame" x="303" y="488" width="277" height="25"/>
+                                <rect key="frame" x="303" y="487" width="277" height="25"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="277" id="LIH-R8-5F4"/>
                                     <constraint firstAttribute="height" constant="25" id="aOf-jJ-DwZ"/>
@@ -405,24 +405,24 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loud" translatesAutoresizingMaskIntoConstraints="NO" id="2iA-LY-EMJ">
-                                <rect key="frame" x="548" y="609" width="32" height="32"/>
+                                <rect key="frame" x="548" y="608" width="32" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="32" id="Rqq-7J-7VE"/>
                                     <constraint firstAttribute="height" constant="32" id="kCW-XJ-d1N"/>
                                 </constraints>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="quiet" translatesAutoresizingMaskIntoConstraints="NO" id="bZZ-br-QBM">
-                                <rect key="frame" x="20" y="609" width="32" height="32"/>
+                                <rect key="frame" x="20" y="608" width="32" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="32" id="Lha-3c-n4L"/>
                                     <constraint firstAttribute="width" constant="32" id="SfC-zc-GIl"/>
                                 </constraints>
                             </imageView>
                             <view opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="200" verticalCompressionResistancePriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="c9T-Ee-vGr" userLabel="Artwork">
-                                <rect key="frame" x="125.5" y="64" width="349" height="349"/>
+                                <rect key="frame" x="129" y="70" width="342" height="342"/>
                                 <subviews>
                                     <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="200" verticalCompressionResistancePriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="aLp-hu-8av">
-                                        <rect key="frame" x="0.0" y="0.0" width="349" height="349"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="342" height="342"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" priority="500" constant="320" id="5kz-6x-ySf"/>
@@ -438,7 +438,7 @@
                                         </variation>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="fZP-OV-0a3" userLabel="Button Image View">
-                                        <rect key="frame" x="43.5" y="43.5" width="262" height="262"/>
+                                        <rect key="frame" x="43" y="43" width="256.5" height="256.5"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="150" id="Fz6-2X-cjm"/>
                                             <constraint firstAttribute="width" constant="150" id="Ygt-JU-SeM"/>
@@ -486,7 +486,7 @@
                                 </variation>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="15P-El-1XW" userLabel="Titles View">
-                                <rect key="frame" x="20" y="421" width="560" height="67"/>
+                                <rect key="frame" x="20" y="420" width="560" height="67"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Song" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DKx-Bh-e3r" customClass="MarqueeLabelSwift" customModule="TobyTunes" customModuleProvider="target">
                                         <rect key="frame" x="60" y="0.0" width="500" height="21"/>
@@ -703,7 +703,7 @@
                 <navigationController id="LD6-pN-Kse" userLabel="GenresNavController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" tag="1001" title="Genres" image="genres" id="6lr-LY-WTu"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="C3d-ec-zdG">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="768" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -719,7 +719,7 @@
             <objects>
                 <collectionViewController id="x0m-LC-awH" userLabel="Album" customClass="AlbumViewController" customModule="TobyTunes" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="ZSA-5b-tjw">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="S8A-Vp-hH7">
                             <size key="itemSize" width="600" height="50"/>
@@ -729,7 +729,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="5k0-8h-UG2" customClass="TTTrackCollectionViewCell" customModule="TobyTunes" customModuleProvider="target">
-                                <rect key="frame" x="-112.5" y="0.0" width="600" height="50"/>
+                                <rect key="frame" x="84" y="0.0" width="600" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
@@ -789,7 +789,7 @@
             <objects>
                 <collectionViewController id="1vJ-D7-BRF" userLabel="Albums" customClass="AlbumsViewController" customModule="TobyTunes" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="f34-9O-IQ6">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="BUj-Is-Z2r">
                             <size key="itemSize" width="600" height="50"/>
@@ -799,7 +799,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="aKT-KP-xOE" customClass="TTAlbumsCollectionViewCell" customModule="TobyTunes" customModuleProvider="target">
-                                <rect key="frame" x="-112.5" y="0.0" width="600" height="50"/>
+                                <rect key="frame" x="84" y="0.0" width="600" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
@@ -916,7 +916,7 @@
                 <navigationController id="aB0-WU-KD0" userLabel="ArtistsNavController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" tag="1002" title="Artists" image="artists" id="LZh-ot-ftB"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="n05-Bz-vYp">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="768" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -932,7 +932,7 @@
             <objects>
                 <collectionViewController id="fsC-uT-sv9" userLabel="Artists" customClass="ArtistsViewController" customModule="TobyTunes" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="U2c-bi-yyu">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="7Rr-7c-ZVt">
@@ -943,7 +943,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="1oi-d4-zm9" userLabel="Cell" customClass="TTArtistsCollectionViewCell" customModule="TobyTunes" customModuleProvider="target">
-                                <rect key="frame" x="-112" y="0.0" width="599" height="50"/>
+                                <rect key="frame" x="84.5" y="0.0" width="599" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="599" height="50"/>
@@ -1073,7 +1073,7 @@
             <objects>
                 <collectionViewController id="hz7-lz-nHE" userLabel="Bookmarks" customClass="BookmarksViewController" customModule="TobyTunes" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="7UQ-jA-a9A">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="l0M-KM-EXe">
@@ -1084,7 +1084,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="phd-Bw-sjF" userLabel="Cell" customClass="TTBookmarkCollectionViewCell" customModule="TobyTunes" customModuleProvider="target">
-                                <rect key="frame" x="-112" y="0.0" width="599" height="50"/>
+                                <rect key="frame" x="84.5" y="0.0" width="599" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="599" height="50"/>
@@ -1148,7 +1148,7 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <state key="normal" title="More"/>
                                             <connections>
-                                                <action selector="handleCellPressed:" destination="hz7-lz-nHE" eventType="touchUpInside" id="Rnw-6J-m5b"/>
+                                                <action selector="handleCellPressedWithSender:" destination="hCJ-ZN-gBd" eventType="touchUpInside" id="sti-IH-q5v"/>
                                             </connections>
                                         </button>
                                     </subviews>
@@ -1215,7 +1215,7 @@
             <objects>
                 <collectionViewController id="INR-po-7VX" userLabel="Genres" customClass="GenresViewController" customModule="TobyTunes" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="fYW-Ey-OTz">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="1F9-wt-uMb">
@@ -1226,7 +1226,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="G8o-hk-v0A" customClass="TTGenreCollectionViewCell" customModule="TobyTunes" customModuleProvider="target">
-                                <rect key="frame" x="87.5" y="0.0" width="200" height="50"/>
+                                <rect key="frame" x="0.0" y="0.0" width="200" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="200" height="50"/>
@@ -1332,6 +1332,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="DFw-v2-kGf"/>
-        <segue reference="wbf-jR-jTN"/>
+        <segue reference="Sro-po-2az"/>
     </inferredMetricsTieBreakers>
 </document>

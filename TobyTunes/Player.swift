@@ -148,7 +148,6 @@ class PlayingTrack {
         self.requestedSeekTime      = nil
         self.seekStartTime          = NSDate(timeIntervalSince1970: 0)
 
-        // DEBUG: Turn off special audio filtering
         self.playerItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithm.timeDomain
         createAudioFilterForPlayerItem()
 
