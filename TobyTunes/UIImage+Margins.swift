@@ -63,13 +63,11 @@ extension UIImage {
     }
 
     func imageWithImage(image:UIImage, scaledToSize newSize:CGSize) -> UIImage {
-        return autoreleasepool { () -> UIImage in
-            UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0);
-            image.draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
-            let newImage = UIGraphicsGetImageFromCurrentImageContext()
-            UIGraphicsEndImageContext()
-            return newImage!
+        let renderer = UIGraphicsImageRenderer(size: newSize)
+        let image = renderer.image { _ in
+            self.draw(in: CGRect.init(origin: CGPoint.zero, size: newSize))
         }
+        return image
     }
 
     func resize(fitWithinSize withinSize: CGSize) -> UIImage {
