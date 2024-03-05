@@ -19,8 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         do {
             try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback,
                                                             mode: AVAudioSession.Mode.default,
-                                                            options: [AVAudioSession.CategoryOptions.defaultToSpeaker,
-                                                                      AVAudioSession.CategoryOptions.allowAirPlay,
+                                                            options: [AVAudioSession.CategoryOptions.allowAirPlay,
                                                                       AVAudioSession.CategoryOptions.allowBluetooth,
                                                                       AVAudioSession.CategoryOptions.allowBluetoothA2DP] )
             try AVAudioSession.sharedInstance().setActive(true)
