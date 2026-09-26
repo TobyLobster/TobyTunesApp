@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA00000000000000000000C2 /* AudioFilterTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000000000000000000C1 /* AudioFilterTap.swift */; };
 		AA00000000000000000000B2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000000000000000000B1 /* SceneDelegate.swift */; };
 		AA00000000000000000000A3 /* MarqueeLabel in Frameworks */ = {isa = PBXBuildFile; productRef = AA00000000000000000000A2 /* MarqueeLabel */; };
 		FF2250151D2F90C6002D0066 /* TTArtistsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2250141D2F90C6002D0066 /* TTArtistsCollectionViewCell.swift */; };
@@ -21,7 +22,6 @@
 		FF22502A1D38E35C002D0066 /* Bookmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2250291D38E35C002D0066 /* Bookmarks.swift */; };
 		FF22502C1D38EA40002D0066 /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF22502B1D38EA40002D0066 /* BookmarksViewController.swift */; };
 		FF22502E1D394BD7002D0066 /* TTBookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF22502D1D394BD7002D0066 /* TTBookmarkCollectionViewCell.swift */; };
-		FF262CD11D5A04CC00172036 /* AudioFilterTap.m in Sources */ = {isa = PBXBuildFile; fileRef = FF262CD01D5A04CC00172036 /* AudioFilterTap.m */; };
 		FF51F5AD1D21BD0400637E58 /* TTAlbumsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF51F5AC1D21BD0400637E58 /* TTAlbumsCollectionViewCell.swift */; };
 		FF51F5AF1D226AC300637E58 /* TTTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF51F5AE1D226AC300637E58 /* TTTabBarController.swift */; };
 		FF6D00071D1AE2FE004CB9F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF6D00061D1AE2FE004CB9F5 /* Assets.xcassets */; };
@@ -41,6 +41,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA00000000000000000000C1 /* AudioFilterTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFilterTap.swift; sourceTree = "<group>"; };
 		AA00000000000000000000B1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		FF2250141D2F90C6002D0066 /* TTArtistsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTArtistsCollectionViewCell.swift; sourceTree = "<group>"; };
 		FF2250161D2FBBC1002D0066 /* TTTrackCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTTrackCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -54,11 +55,8 @@
 		FF2250291D38E35C002D0066 /* Bookmarks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bookmarks.swift; sourceTree = "<group>"; };
 		FF22502B1D38EA40002D0066 /* BookmarksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
 		FF22502D1D394BD7002D0066 /* TTBookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTBookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
-		FF262CCF1D5A04CC00172036 /* AudioFilterTap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioFilterTap.h; sourceTree = "<group>"; };
-		FF262CD01D5A04CC00172036 /* AudioFilterTap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioFilterTap.m; sourceTree = "<group>"; };
 		FF51F5AC1D21BD0400637E58 /* TTAlbumsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTAlbumsCollectionViewCell.swift; sourceTree = "<group>"; };
 		FF51F5AE1D226AC300637E58 /* TTTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTTabBarController.swift; sourceTree = "<group>"; };
-		FF5BF6E61D4227DA00050B55 /* TobyTunes-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TobyTunes-Bridging-Header.h"; sourceTree = "<group>"; };
 		FF6D00061D1AE2FE004CB9F5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FF6D00091D1AE2FE004CB9F5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FF6D000B1D1AE2FE004CB9F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -101,7 +99,6 @@
 			children = (
 				FF6DFFFC1D1AE2FE004CB9F5 /* TobyTunes */,
 				FF6DFFFB1D1AE2FE004CB9F5 /* Products */,
-				FF5BF6E61D4227DA00050B55 /* TobyTunes-Bridging-Header.h */,
 				FF23978A21A1B37500B00508 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -179,8 +176,7 @@
 			children = (
 				FF2250271D379558002D0066 /* MusicLibrary.swift */,
 				FF7434E51D547080005AD50B /* Player.swift */,
-				FF262CCF1D5A04CC00172036 /* AudioFilterTap.h */,
-				FF262CD01D5A04CC00172036 /* AudioFilterTap.m */,
+				AA00000000000000000000C1 /* AudioFilterTap.swift */,
 			);
 			name = Audio;
 			sourceTree = "<group>";
@@ -296,8 +292,8 @@
 				FF87CA3B1D1AE3D3001A5945 /* Constants.swift in Sources */,
 				FF22502C1D38EA40002D0066 /* BookmarksViewController.swift in Sources */,
 				FF7434E61D547080005AD50B /* Player.swift in Sources */,
+				AA00000000000000000000C2 /* AudioFilterTap.swift in Sources */,
 				FF22501B1D329D0D002D0066 /* NowPlayingNavigationController.swift in Sources */,
-				FF262CD11D5A04CC00172036 /* AudioFilterTap.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,7 +426,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "TobyTunes-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.2;
@@ -454,7 +449,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "TobyTunes-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.2;

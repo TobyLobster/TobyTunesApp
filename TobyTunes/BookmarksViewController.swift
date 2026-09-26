@@ -103,15 +103,12 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDeleg
                 cell.bookmarkDetails?.font = Utilities.fontSized(originalSize: 15)
                 cell.bookmarkPlay?.titleLabel?.font = Utilities.fontSized(originalSize: 15)
 
-                // Space available to the progress bar: it starts 55pt past the 8pt left margin
-                // and can extend to the cell's right edge (cell width - 8 - 55 = full width).
-                let fullWidth = max(0, cell.frame.width - 63)
                 if let bookmark = Bookmarks.getBookmarkAtIndex(index: dataIndex) {
 
                     // Update progress width constraint
                     if bookmark.playlist.totalDuration > 0 {
-                        let progress = min(1.0, max(0.0, bookmark.elapsedTime() / bookmark.playlist.totalDuration))
-                        cell.bookmarkWidthConstraint?.constant = CGFloat(-8 + ((1.0-progress) * Double(fullWidth)))
+                        // The cell sizes the progress bar from this at layout time
+                        cell.progress = CGFloat(bookmark.elapsedTime() / bookmark.playlist.totalDuration)
                     }
 
                     var currentlyPlayingIndex = -1
