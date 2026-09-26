@@ -27,7 +27,7 @@ class TTTabBarController: UITabBarController {
     static let tabBarSurroundColour = UIColor { traits in
         traits.userInterfaceStyle == .dark
             ? UIColor(red: 0x16/255.0, green: 0x16/255.0, blue: 0x18/255.0, alpha: 1)
-            : UIColor(red: 0xEE/255.0, green: 0xE5/255.0, blue: 0xEA/255.0, alpha: 1)
+            : UIColor(red: 0xDE/255.0, green: 0xD5/255.0, blue: 0xDA/255.0, alpha: 1)
     }
 
     /// The tab bar itself: white in Light Mode, dark grey in Dark Mode, so it stands out from its surround.
