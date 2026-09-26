@@ -573,7 +573,9 @@
                             <constraint firstAttribute="bottom" secondItem="LnD-bG-jHE" secondAttribute="bottom" constant="111" id="9Oo-8u-DKC"/>
                             <constraint firstItem="LnD-bG-jHE" firstAttribute="top" secondItem="zTg-OV-9Fj" secondAttribute="bottom" constant="8" id="EAS-86-Ret"/>
                             <constraint firstItem="YW6-3f-FxH" firstAttribute="leading" secondItem="0Cu-q4-HLB" secondAttribute="leadingMargin" constant="35" id="ECj-df-4Xw"/>
-                            <constraint firstItem="c9T-Ee-vGr" firstAttribute="top" secondItem="Xbn-j0-gGg" secondAttribute="bottom" id="H8e-9V-OFM"/>
+                            <constraint firstItem="c9T-Ee-vGr" firstAttribute="top" secondItem="Xbn-j0-gGg" secondAttribute="bottom" id="H8e-9V-OFM">
+                                <variation key="heightClass=compact" constant="12"/>
+                            </constraint>
                             <constraint firstItem="aSJ-zo-7ws" firstAttribute="top" secondItem="2iA-LY-EMJ" secondAttribute="bottom" constant="10" id="HeQ-iI-DX9"/>
                             <constraint firstItem="2iA-LY-EMJ" firstAttribute="leading" secondItem="YW6-3f-FxH" secondAttribute="trailing" constant="8" symbolic="YES" id="Ia5-e2-J2Z"/>
                             <constraint firstItem="wRy-LW-2AW" firstAttribute="top" secondItem="c9T-Ee-vGr" secondAttribute="bottom" constant="74" priority="999" id="JDs-XB-I0u">
@@ -597,7 +599,7 @@
                             <constraint firstItem="c9T-Ee-vGr" firstAttribute="leading" secondItem="0Cu-q4-HLB" secondAttribute="leading" constant="122" id="VSr-Ua-hTs"/>
                             <constraint firstItem="bZZ-br-QBM" firstAttribute="leading" secondItem="0Cu-q4-HLB" secondAttribute="leadingMargin" id="W1T-pB-OMw"/>
                             <constraint firstItem="zTg-OV-9Fj" firstAttribute="top" secondItem="15P-El-1XW" secondAttribute="bottom" constant="20" id="WOK-6L-Du5"/>
-                            <constraint firstItem="15P-El-1XW" firstAttribute="leading" secondItem="c9T-Ee-vGr" secondAttribute="trailing" constant="8" id="X1S-8a-z0q"/>
+                            <constraint firstItem="15P-El-1XW" firstAttribute="leading" secondItem="c9T-Ee-vGr" secondAttribute="trailing" constant="24" id="X1S-8a-z0q"/>
                             <constraint firstItem="LnD-bG-jHE" firstAttribute="leading" secondItem="0Cu-q4-HLB" secondAttribute="leadingMargin" id="X5E-E4-DHV"/>
                             <constraint firstItem="2iA-LY-EMJ" firstAttribute="top" secondItem="LnD-bG-jHE" secondAttribute="bottom" constant="3" id="YoT-TE-Cae"/>
                             <constraint firstItem="15P-El-1XW" firstAttribute="top" secondItem="c9T-Ee-vGr" secondAttribute="bottom" constant="1" id="Zhm-ct-AF5"/>
@@ -619,10 +621,34 @@
                             <constraint firstItem="c9T-Ee-vGr" firstAttribute="centerX" secondItem="0Cu-q4-HLB" secondAttribute="centerX" id="z8u-4c-1vi"/>
                             <constraint firstItem="c9T-Ee-vGr" firstAttribute="width" relation="lessThanOrEqual" secondItem="0Cu-q4-HLB" secondAttribute="width" constant="-48" id="aRt-Wd-Max"/>
                             <constraint firstItem="c9T-Ee-vGr" firstAttribute="width" secondItem="0Cu-q4-HLB" secondAttribute="width" constant="-48" priority="750" id="aRt-Wd-Prf"/>
+                            <constraint firstItem="aSJ-zo-7ws" firstAttribute="top" relation="greaterThanOrEqual" secondItem="c9T-Ee-vGr" secondAttribute="bottom" constant="12" id="Lsc-Nw-a01"/>
+                            <constraint firstItem="aSJ-zo-7ws" firstAttribute="top" secondItem="c9T-Ee-vGr" secondAttribute="bottom" constant="12" priority="750" id="Lsc-Nw-a02"/>
+                            <constraint firstItem="c9T-Ee-vGr" firstAttribute="width" relation="lessThanOrEqual" secondItem="0Cu-q4-HLB" secondAttribute="width" multiplier="0.5" id="Lsc-Nw-a03"/>
+                            <constraint firstItem="aSJ-zo-7ws" firstAttribute="top" secondItem="YW6-3f-FxH" secondAttribute="bottom" constant="12" id="Lsc-Nw-a04"/>
+                            <constraint firstItem="YW6-3f-FxH" firstAttribute="bottom" secondItem="bZZ-br-QBM" secondAttribute="bottom" constant="10" id="Lsc-Nw-a05"/>
+                            <constraint firstItem="YW6-3f-FxH" firstAttribute="bottom" secondItem="2iA-LY-EMJ" secondAttribute="bottom" constant="10" id="Lsc-Nw-a06"/>
+                            <constraint firstItem="bZZ-br-QBM" firstAttribute="leading" secondItem="c9T-Ee-vGr" secondAttribute="trailing" constant="24" id="Lsc-Nw-a07"/>
+                            <constraint firstItem="YW6-3f-FxH" firstAttribute="leading" secondItem="c9T-Ee-vGr" secondAttribute="trailing" constant="59" id="Lsc-Nw-a08"/>
+                            <constraint firstItem="LnD-bG-jHE" firstAttribute="leading" secondItem="c9T-Ee-vGr" secondAttribute="trailing" constant="24" id="Lsc-Nw-a09"/>
+                            <constraint firstItem="zTg-OV-9Fj" firstAttribute="leading" secondItem="c9T-Ee-vGr" secondAttribute="trailing" constant="24" id="Lsc-Nw-a10"/>
+                            <constraint firstItem="lpv-bp-JiK" firstAttribute="leading" secondItem="c9T-Ee-vGr" secondAttribute="trailing" constant="24" id="Lsc-Nw-a11"/>
+                            <constraint firstItem="lpv-bp-JiK" firstAttribute="top" secondItem="15P-El-1XW" secondAttribute="bottom" constant="12" id="Lsc-Nw-a12"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="1FQ-2O-jvl"/>
+                                <exclude reference="Lsc-Nw-a01"/>
+                                <exclude reference="Lsc-Nw-a02"/>
+                                <exclude reference="Lsc-Nw-a03"/>
+                                <exclude reference="Lsc-Nw-a04"/>
+                                <exclude reference="Lsc-Nw-a05"/>
+                                <exclude reference="Lsc-Nw-a06"/>
+                                <exclude reference="Lsc-Nw-a07"/>
+                                <exclude reference="Lsc-Nw-a08"/>
+                                <exclude reference="Lsc-Nw-a09"/>
+                                <exclude reference="Lsc-Nw-a10"/>
+                                <exclude reference="Lsc-Nw-a11"/>
+                                <exclude reference="Lsc-Nw-a12"/>
                                 <exclude reference="79y-GN-3Ol"/>
                                 <exclude reference="Qaq-5W-Qyj"/>
                                 <exclude reference="Sv6-RK-tvF"/>
@@ -661,7 +687,6 @@
                             <mask key="constraints">
                                 <include reference="Qaq-5W-Qyj"/>
                                 <exclude reference="z8u-4c-1vi"/>
-                                <include reference="0fz-Cd-TLg"/>
                                 <exclude reference="2Bm-9H-bkJ"/>
                                 <exclude reference="Mnp-N1-59U"/>
                                 <include reference="Pp3-Bq-jVV"/>
@@ -669,8 +694,27 @@
                                 <exclude reference="mma-pQ-H8p"/>
                                 <exclude reference="nmx-wu-OCs"/>
                                 <exclude reference="LAS-7x-VC5"/>
-                                <include reference="JDs-XB-I0u"/>
                                 <exclude reference="aRt-Wd-Prf"/>
+                                <include reference="Lsc-Nw-a01"/>
+                                <include reference="Lsc-Nw-a02"/>
+                                <include reference="Lsc-Nw-a03"/>
+                                <include reference="Lsc-Nw-a04"/>
+                                <include reference="Lsc-Nw-a05"/>
+                                <include reference="Lsc-Nw-a06"/>
+                                <include reference="Lsc-Nw-a07"/>
+                                <include reference="Lsc-Nw-a08"/>
+                                <include reference="Lsc-Nw-a09"/>
+                                <include reference="Lsc-Nw-a10"/>
+                                <include reference="Lsc-Nw-a11"/>
+                                <include reference="Lsc-Nw-a12"/>
+                                <exclude reference="8Y2-AT-Jq1"/>
+                                <exclude reference="1mY-dv-Y5g"/>
+                                <exclude reference="HeQ-iI-DX9"/>
+                                <exclude reference="W1T-pB-OMw"/>
+                                <exclude reference="ECj-df-4Xw"/>
+                                <exclude reference="X5E-E4-DHV"/>
+                                <exclude reference="bGZ-HN-vpW"/>
+                                <exclude reference="l7s-Vr-kin"/>
                             </mask>
                         </variation>
                     </view>

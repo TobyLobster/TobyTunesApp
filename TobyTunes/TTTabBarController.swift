@@ -43,6 +43,7 @@ class TTTabBarController: UITabBarController {
         tabBar.standardAppearance = appearance
         tabBar.scrollEdgeAppearance = appearance
         tabBar.isTranslucent = false
+        refreshTabBarLayout()
 
         // Keep the tab bar's light/dark style fixed to the phone's setting on every tab,
         // including the dark Now Playing screen
@@ -55,6 +56,31 @@ class TTTabBarController: UITabBarController {
         if Player.sharedInstance.playState() == .Playing {
             // Go to now playing tab
             self.selectedIndex = nowPlayingTabIndex
+        }
+    }
+
+    /// iOS 26 can measure the tab titles before the tab bar has finished laying out when it has
+    /// a custom appearance, leaving them cut short ("Now Play…", "Bookmar…"). Re-applying the
+    /// appearance and laying out straight away makes it measure them again at the right size.
+    func refreshTabBarLayout() {
+        let standard = tabBar.standardAppearance
+        tabBar.standardAppearance = standard
+        tabBar.scrollEdgeAppearance = tabBar.scrollEdgeAppearance ?? standard
+        tabBar.setNeedsLayout()
+        tabBar.layoutIfNeeded()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // First chance to measure the titles at the tab bar's real on-screen size
+        refreshTabBarLayout()
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        // The titles change between side by side (landscape) and stacked (portrait): re-measure after rotating
+        coordinator.animate(alongsideTransition: nil) { _ in
+            self.refreshTabBarLayout()
         }
     }
 
