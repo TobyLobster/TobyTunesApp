@@ -45,7 +45,7 @@ class GenresViewController: UICollectionViewController, UICollectionViewDelegate
         let title   = titleString(dataIndex: dataIndex)
         let details = detailsString(dataIndex: dataIndex)
         guard let collectionView = collectionView else { return CGSize.zero }
-        let maxWidth = collectionView.frame.size.width
+        let maxWidth = Utilities.usableWidth(of: collectionView)
         let width    = floor(maxWidth / CGFloat(columns))
 
         let detailsSize = Utilities.measureText(text: details, attributes: Utilities.textDetailsAttributes(), width: width)
@@ -132,7 +132,7 @@ class GenresViewController: UICollectionViewController, UICollectionViewDelegate
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if needsRecalculation {
-            recalculateColumns(size: self.view.frame.size)
+            recalculateColumns(size: self.view.safeAreaLayoutGuide.layoutFrame.size)
             if rowToTransitionTo >= 0 {
                 let indexPath = IndexPath(row: rowToTransitionTo, section: 0)
                 self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: false)
@@ -230,8 +230,7 @@ class GenresViewController: UICollectionViewController, UICollectionViewDelegate
     }
 
     func recalculateColumns(size: CGSize) {
-        let minColumnWidthInches = 2.0
-        columns = Utilities.recalculateColumns(size: size, minColumnWidthInches: minColumnWidthInches)
+        columns = Utilities.recalculateColumns(size: size)
         self.collectionView?.reloadData()
     }
 

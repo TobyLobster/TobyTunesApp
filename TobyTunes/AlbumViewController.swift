@@ -52,7 +52,7 @@ class AlbumViewController: UICollectionViewController, UICollectionViewDelegateF
         let title   = titleString(dataIndex: dataIndex)
         let details = detailsString(dataIndex: dataIndex)
         guard let collectionView = collectionView else { return CGSize.zero }
-        let maxWidth = collectionView.frame.size.width
+        let maxWidth = Utilities.usableWidth(of: collectionView)
         let width    = floor(maxWidth / CGFloat(columns))
 
         let titleSize   = Utilities.measureText(text: title, attributes: Utilities.textTitleAttributes(), width: width - 23)
@@ -169,7 +169,7 @@ class AlbumViewController: UICollectionViewController, UICollectionViewDelegateF
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if needsRecalculation {
-            recalculateColumns(size: self.view.frame.size)
+            recalculateColumns(size: self.view.safeAreaLayoutGuide.layoutFrame.size)
             if rowToTransitionTo >= 0 {
                 let indexPath = IndexPath(row: rowToTransitionTo, section: 0)
                 self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: false)
@@ -263,8 +263,7 @@ class AlbumViewController: UICollectionViewController, UICollectionViewDelegateF
     }
 
     func recalculateColumns(size: CGSize) {
-        let minColumnWidthInches = 2.0
-        columns = Utilities.recalculateColumns(size: size, minColumnWidthInches: minColumnWidthInches)
+        columns = Utilities.recalculateColumns(size: size)
         self.collectionView?.reloadData()
     }
 

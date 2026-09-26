@@ -21,19 +21,6 @@ extension UITabBarController {
     }
 }
 
-extension UIDevice {
-    var modelName: String {
-        var systemInfo = utsname()
-        uname(&systemInfo)
-        let machineMirror = Mirror(reflecting: systemInfo.machine)
-        let identifier = machineMirror.children.reduce("") { identifier, element in
-            guard let value = element.value as? Int8, value != 0 else { return identifier }
-            return identifier + String(UnicodeScalar(UInt8(value)))
-        }
-        return identifier
-    }
-}
-
 
 struct Utilities {
     static func delay(delay:Double, closure:@escaping ()->()) {
@@ -185,120 +172,6 @@ struct Utilities {
         return textRect.size
     }
 
-    static func deviceInfo() -> (name: String, screenDiagonalInches: Float, dpi: Float)? {
-        let device = UIDevice.current.modelName
-        if (device.starts(with: "iPhone"))
-        {
-            switch (device) {
-                case "iPhone1,1":  return ("iPhone 1",                    3.5, 163.0)
-                case "iPhone1,2":  return ("iPhone 3G",                   3.5, 163.0)
-                case "iPhone2,1":  return ("iPhone 3GS",                  3.5, 163.0)
-                case "iPhone3,1":  return ("iPhone 4",                    3.5, 326.0)
-                case "iPhone3,2":  return ("iPhone 4",                    3.5, 326.0)
-                case "iPhone3,3":  return ("iPhone 4",                    3.5, 326.0)
-                case "iPhone4,1":  return ("iPhone 4s",                   3.5, 326.0)
-                case "iPhone5,1":  return ("iPhone 5",                    4.0, 326.0)
-                case "iPhone5,2":  return ("iPhone 5",                    4.0, 326.0)
-                case "iPhone5,3":  return ("iPhone 5c",                   4.0, 326.0)
-                case "iPhone5,4":  return ("iPhone 5c",                   4.0, 326.0)
-                case "iPhone6,1":  return ("iPhone 5s",                   4.0, 326.0)
-                case "iPhone6,2":  return ("iPhone 5s",                   4.0, 326.0)
-                case "iPhone7,1":  return ("iPhone 6 Plus",               5.5, 401.0)
-                case "iPhone7,2":  return ("iPhone 6",                    4.7, 326.0)
-                case "iPhone8,1":  return ("iPhone 6s",                   4.7, 326.0)
-                case "iPhone8,2":  return ("iPhone 6s Plus",              5.5, 401.0)
-                case "iPhone8,4":  return ("iPhone SE",                   4.0, 326.0)
-                case "iPhone9,1":  return ("iPhone 7",                    4.7, 326.0)
-                case "iPhone9,2":  return ("iPhone 7 Plus",               5.5, 401.0)
-                case "iPhone9,3":  return ("iPhone 7",                    4.7, 326.0)
-                case "iPhone9,4":  return ("iPhone 7 Plus",               5.5, 401.0)
-                case "iPhone10,1": return ("iPhone 8",                    4.7, 326.0)
-                case "iPhone10,2": return ("iPhone 8 Plus",               5.5, 401.0)
-                case "iPhone10,3": return ("iPhone X",                    5.8, 458.0)
-                case "iPhone10,4": return ("iPhone 8",                    4.7, 326.0)
-                case "iPhone10,5": return ("iPhone 8 Plus",               5.5, 401.0)
-                case "iPhone10,6": return ("iPhone X",                    5.8, 458.0)
-                case "iPhone11,2": return ("iPhone XS",                   5.8, 458.0)
-                case "iPhone11,4": return ("iPhone XS MAX",               6.5, 458.0)
-                case "iPhone11,6": return ("iPhone XS MAX",               6.5, 458.0)
-                case "iPhone11,8": return ("iPhone XR",                   6.1, 326.0)
-                default: return ("iPhone Unknown",                        6.1, 326.0)
-            }
-        }
-        else if (device.starts(with: "iPad"))
-        {
-            switch(device)
-            {
-                case "iPad1,1":   return ("iPad 1",                       9.7, 132.0)
-                case "iPad2,1":   return ("iPad 2",                       9.7, 132.0)
-                case "iPad2,2":   return ("iPad 2",                       9.7, 132.0)
-                case "iPad2,3":   return ("iPad 2",                       9.7, 132.0)
-                case "iPad2,4":   return ("iPad 2",                       9.7, 132.0)
-                case "iPad2,5":   return ("iPad Mini 1",                  7.9, 163.0)
-                case "iPad2,6":   return ("iPad Mini 1",                  7.9, 163.0)
-                case "iPad2,7":   return ("iPad Mini 1",                  7.9, 163.0)
-                case "iPad3,1":   return ("iPad 3",                       9.7, 264.0)
-                case "iPad3,2":   return ("iPad 3",                       9.7, 264.0)
-                case "iPad3,3":   return ("iPad 3",                       9.7, 264.0)
-                case "iPad3,4":   return ("iPad 4",                       9.7, 264.0)
-                case "iPad3,5":   return ("iPad 4",                       9.7, 264.0)
-                case "iPad3,6":   return ("iPad 4",                       9.7, 264.0)
-                case "iPad4,1":   return ("iPad Air 1",                   9.7, 264.0)
-                case "iPad4,2":   return ("iPad Air 1",                   9.7, 264.0)
-                case "iPad4,3":   return ("iPad Air 1",                   9.7, 264.0)
-                case "iPad4,4":   return ("iPad Mini 2",                  7.9, 326.0)
-                case "iPad4,5":   return ("iPad Mini 2",                  7.9, 326.0)
-                case "iPad4,6":   return ("iPad Mini 2",                  7.9, 326.0)
-                case "iPad4,7":   return ("iPad Mini 3",                  7.9, 326.0)
-                case "iPad4,8":   return ("iPad Mini 3",                  7.9, 326.0)
-                case "iPad4,9":   return ("iPad Mini 3",                  7.9, 326.0)
-                case "iPad5,1":   return ("iPad Mini 4",                  7.9, 326.0)
-                case "iPad5,2":   return ("iPad Mini 4",                  7.9, 326.0)
-                case "iPad5,3":   return ("iPad Air 2",                   9.7, 264.0)
-                case "iPad5,4":   return ("iPad Air 2",                   9.7, 264.0)
-                case "iPad6,3":   return ("iPad Pro 9.7 Inch 1st Gen",    9.7, 264.0)
-                case "iPad6,4":   return ("iPad Pro 9.7 Inch 1st Gen",    9.7, 264.0)
-                case "iPad6,7":   return ("iPad Pro 12.9 Inch 1st Gen",  12.9, 264.0)
-                case "iPad6,8":   return ("iPad Pro 12.9 Inch 1st Gen",  12.9, 264.0)
-                case "iPad6,11":  return ("iPad 9.7 Inch 5th Gen",        9.7, 264.0)
-                case "iPad6,12":  return ("iPad 9.7 Inch 5th Gen",        9.7, 264.0)
-                case "iPad7,1":   return ("iPad Pro 12.9 Inch 2nd Gen",  12.9, 264.0)
-                case "iPad7,2":   return ("iPad Pro 12.9 Inch 2nd Gen",  12.9, 264.0)
-                case "iPad7,3":   return ("iPad Pro 10.5 Inch",          10.5, 264.0)
-                case "iPad7,4":   return ("iPad Pro 10.5 Inch",          10.5, 264.0)
-                case "iPad7,5":   return ("iPad 9.7 Inch 6th Gen",        9.7, 264.0)
-                case "iPad7,6":   return ("iPad 9.7 Inch 6th Gen",        9.7, 264.0)
-                default:          return ("iPad Unknown",                 9.7, 264.0)
-            }
-        }
-        else if (device.starts(with: "iPod"))
-        {
-            switch(device)
-            {
-                case "iPod1,1": return ("iPod Touch 1",                   3.5, 163.0)
-                case "iPod2,1": return ("iPod Touch 2",                   3.5, 163.0)
-                case "iPod3,1": return ("iPod Touch 3",                   3.5, 163.0)
-                case "iPod4,1": return ("iPod Touch 4",                   3.5, 326.0)
-                case "iPod5,1": return ("iPod Touch 5",                   4.0, 326.0)
-                case "iPod7,1": return ("iPod Touch 6",                   4.0, 326.0)
-                default: return ("iPod Touch Unknown",                    4.0, 326.0)
-            }
-        }
-        return nil
-    }
-
-    static func screenSizeInches() -> (Double, Double)? {
-        if let info = deviceInfo() {
-            let resolutionPoints = UIScreen.main.bounds.size
-            let d = Double(info.screenDiagonalInches)
-            let r = Double(resolutionPoints.width) / Double(resolutionPoints.height)
-            let h = d / sqrt(1 + r*r)
-            let w = r * h
-            return (w, h)
-        }
-        return nil
-    }
-
     static func tableIndexToDataIndex(tableIndex: Int, columns: Int, total: Int) -> Int {
         if tableIndex < 0 {
             return -1
@@ -341,21 +214,26 @@ struct Utilities {
         return row * columns + column
     }
     
-    static func recalculateColumns(size: CGSize, minColumnWidthInches: Double) -> Int {
-        if let info = Utilities.deviceInfo() {
-            let d = Double(info.screenDiagonalInches)
-            let r = Double(size.width) / Double(size.height)
-            let h = d / sqrt(1 + r*r)
-            let w = r * h
-            let orientedSizeInches = (w, h)
-            let availableWidthInches = orientedSizeInches.0
-            var columns = Int(availableWidthInches / minColumnWidthInches)
-            if columns <= 0 {
-                columns = 1
-            }
-            return columns
-        }
-        return 1
+    /// Approximate points per physical inch. Points are almost the same physical size across
+    /// each device family: current iPhones are ~153 (460 ppi at 3x; older models 163),
+    /// iPads are 132 (264 ppi at 2x; the iPad mini is 163).
+    static func pointsPerInch() -> Double {
+        return UIDevice.current.userInterfaceIdiom == .pad ? 132.0 : 153.0
+    }
+
+    /// Width of a collection view that content can use: its width less the left and right
+    /// safe-area insets (the Dynamic Island / notch side and the matching inset opposite it in landscape).
+    static func usableWidth(of collectionView: UICollectionView) -> CGFloat {
+        let insets = collectionView.safeAreaInsets
+        return max(0, collectionView.bounds.width - insets.left - insets.right)
+    }
+
+    /// Number of columns that fit in `size` (the view's size, in points) with each column
+    /// at least `minColumnWidthInches` wide (set in Constants.swift). Uses the view's own width,
+    /// so it is correct in Split View, Slide Over and Stage Manager, and needs no per-model lookup table.
+    static func recalculateColumns(size: CGSize) -> Int {
+        let availableWidthInches = Double(size.width) / pointsPerInch()
+        return max(1, Int(availableWidthInches / minColumnWidthInches))
     }
 
     static func cellBackgroundColor(indexPath: IndexPath, currentlyPlayingTableIndex: Int) -> UIColor {
