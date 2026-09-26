@@ -176,7 +176,6 @@ class NowPlayingViewController: UIViewController, Subscriber {
             if let volumeViewParent = volumeViewParent {
                 self.volumeView = ALVolumeView(frame: volumeViewParent.bounds)
                 if let volumeView = self.volumeView {
-                    volumeView.showsRouteButton = true
                     volumeView.setVolumeThumbImage(thumbImage, for: [])
                     volumeViewParent.addSubview(volumeView)
                     volumeView.sizeToFit()
@@ -241,23 +240,23 @@ class NowPlayingViewController: UIViewController, Subscriber {
                     } else {
                         titleLabel?.text = "Unknown title"
                     }
-                    titleLabel?.marqueeType = .MLContinuous
-                    titleLabel?.scrollDuration = 6
-                    titleLabel?.animationCurve = UIView.AnimationOptions.curveLinear
+                    titleLabel?.type = .continuous
+                    titleLabel?.speed = .duration(6)
+                    titleLabel?.animationCurve = .linear
                     titleLabel?.fadeLength = 0.0
                     titleLabel?.animationDelay = 3.0
                     titleLabel?.trailingBuffer = 50.0
 
-                    albumLabel?.marqueeType = .MLContinuous
-                    albumLabel?.scrollDuration = 6
-                    albumLabel?.animationCurve = UIView.AnimationOptions.curveLinear
+                    albumLabel?.type = .continuous
+                    albumLabel?.speed = .duration(6)
+                    albumLabel?.animationCurve = .linear
                     albumLabel?.fadeLength = 0.0
                     albumLabel?.animationDelay = 3.0
                     albumLabel?.trailingBuffer = 50.0
 
-                    artistLabel?.marqueeType = .MLContinuous
-                    artistLabel?.scrollDuration = 6
-                    artistLabel?.animationCurve = UIView.AnimationOptions.curveLinear
+                    artistLabel?.type = .continuous
+                    artistLabel?.speed = .duration(6)
+                    artistLabel?.animationCurve = .linear
                     artistLabel?.fadeLength = 0.0
                     artistLabel?.animationDelay = 3.0
                     artistLabel?.trailingBuffer = 50.0

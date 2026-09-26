@@ -10,6 +10,33 @@ import Foundation
 import UIKit
 import MediaPlayer
 
+/// Wraps NSKeyedArchiver / NSKeyedUnarchiver using the secure-coding APIs.
+/// Only Foundation property-list types are stored, so existing saved bookmarks still decode.
+enum ArchiveHelper {
+    static let allowedClasses: [AnyClass] = [NSDictionary.self, NSMutableDictionary.self,
+                                             NSArray.self, NSNumber.self, NSString.self, NSData.self]
+
+    static func unarchiveDictionary(_ data: Data) -> NSDictionary {
+        do {
+            if let dictionary = try NSKeyedUnarchiver.unarchivedObject(ofClasses: allowedClasses, from: data) as? NSDictionary {
+                return dictionary
+            }
+        } catch {
+            print("Failed to unarchive: \(error)")
+        }
+        return NSDictionary()
+    }
+
+    static func archive(_ dictionary: NSDictionary) -> Data {
+        do {
+            return try NSKeyedArchiver.archivedData(withRootObject: dictionary, requiringSecureCoding: true)
+        } catch {
+            print("Failed to archive: \(error)")
+            return Data()
+        }
+    }
+}
+
 enum EPlaylistType: Int {
     case Album = 1, Artist, Unknown, None
 }
@@ -44,7 +71,7 @@ struct Playlist {
     }
 
     init(data: Data) {
-        let dictionary = NSKeyedUnarchiver.unarchiveObject(with: data) as! NSDictionary
+        let dictionary = ArchiveHelper.unarchiveDictionary(data)
         type = EPlaylistType( rawValue: (dictionary["type"] as! NSNumber).intValue )!
         artistPersistentID = (dictionary["artistPersistentID"] as! NSNumber).uint64Value
         albumPersistentID = (dictionary["albumPersistentID"] as! NSNumber).uint64Value
@@ -69,7 +96,7 @@ struct Playlist {
         dictionary["details"] = details
         dictionary["totalDuration"] = totalDuration
 
-        return NSKeyedArchiver.archivedData(withRootObject: dictionary)
+        return ArchiveHelper.archive(dictionary)
     }
 }
 
@@ -109,7 +136,7 @@ struct Bookmark {
     }
 
     init(data: Data) {
-        let dictionary = NSKeyedUnarchiver.unarchiveObject(with: data) as! NSDictionary
+        let dictionary = ArchiveHelper.unarchiveDictionary(data)
 
         id = Bookmark.getNextId()
         playlist = Playlist( data: dictionary["playlist"] as! Data )
@@ -125,7 +152,7 @@ struct Bookmark {
         dictionary["currentTrackTime"] = currentTrackTime
         dictionary["currentTrackDuration"] = currentTrackDuration
 
-        return NSKeyedArchiver.archivedData(withRootObject: dictionary)
+        return ArchiveHelper.archive(dictionary)
     }
 
     func containsTrackID(trackID: UInt64) -> Bool {
@@ -139,7 +166,7 @@ struct BookmarkData {
     var marks: [Bookmark] = []
 
     mutating func decode(data: Data) {
-        let dictionary = NSKeyedUnarchiver.unarchiveObject(with: data) as! NSDictionary
+        let dictionary = ArchiveHelper.unarchiveDictionary(data)
         if dictionary["version"] == nil {
             return
         }
@@ -153,7 +180,7 @@ struct BookmarkData {
         dictionary["version"] = NSNumber( value: version )
         dictionary["marks"] = marks.map { $0.encode() }
 
-        return NSKeyedArchiver.archivedData(withRootObject: dictionary)
+        return ArchiveHelper.archive(dictionary)
     }
 }
 

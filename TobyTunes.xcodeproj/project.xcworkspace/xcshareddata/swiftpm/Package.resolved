@@ -1,0 +1,15 @@
+{
+  "originHash" : "311d484cf99b5d2e6d9e01e21c13f89898e30330843bc7bd879dd1f31be32460",
+  "pins" : [
+    {
+      "identity" : "marqueelabel",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/cbpowell/MarqueeLabel.git",
+      "state" : {
+        "revision" : "c6b4da400c00dfd5db7a4f6e4915ca531d95fc49",
+        "version" : "4.5.3"
+      }
+    }
+  ],
+  "version" : 3
+}

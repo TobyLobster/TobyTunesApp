@@ -53,8 +53,8 @@ enum PlaybackRequestedState {
 }
 
 class PlayingTrack {
-    static var statusContext = "StatusContext"
-    static var rateContext = "RateContext"
+    static var statusContext = 0
+    static var rateContext = 0
 
     var avPlayer: AVPlayer
     var playerItem: AVPlayerItem
@@ -117,7 +117,7 @@ class PlayingTrack {
             unprepare: tapUnprepare,
             process: tapProcess)
 
-        var tap: Unmanaged<MTAudioProcessingTap>?
+        var tap: MTAudioProcessingTap?
         let err = MTAudioProcessingTapCreate(kCFAllocatorDefault, &callbacks, kMTAudioProcessingTapCreationFlag_PostEffects, &tap)
 
         if err != 0 {
@@ -126,15 +126,24 @@ class PlayingTrack {
 
         //print("tracks? \(playerItem.asset.tracks)\n")
 
-        let audioTrack = playerItem.asset.tracks(withMediaType: AVMediaType.audio).first!
-        let inputParams = AVMutableAudioMixInputParameters(track: audioTrack)
-        inputParams.audioTapProcessor = tap?.takeUnretainedValue()
+        let item = playerItem
+        let tapProcessor = tap
+        item.asset.loadTracks(withMediaType: AVMediaType.audio) { tracks, error in
+            guard let audioTrack = tracks?.first else {
+                print("No audio track: \(String(describing: error))")
+                return
+            }
+            let inputParams = AVMutableAudioMixInputParameters(track: audioTrack)
+            inputParams.audioTapProcessor = tapProcessor
 
-        // print("inputParms: \(inputParams), \(inputParams.audioTapProcessor)\n")
-        let audioMix = AVMutableAudioMix()
-        audioMix.inputParameters = [inputParams]
+            // print("inputParms: \(inputParams), \(inputParams.audioTapProcessor)\n")
+            let audioMix = AVMutableAudioMix()
+            audioMix.inputParameters = [inputParams]
 
-        playerItem.audioMix = audioMix
+            DispatchQueue.main.async {
+                item.audioMix = audioMix
+            }
+        }
     }
 
     init(URL: URL, persistentID: UInt64, observer: Player) {

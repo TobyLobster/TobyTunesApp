@@ -94,8 +94,8 @@ extension UIImage {
             cgImage = self.cgImage?.cropping(to: rect)
         }
         else if self.ciImage != nil {
-            let openGLContext = EAGLContext(api: .openGLES3)
-            let context = CIContext(eaglContext: openGLContext!, options:convertToOptionalCIContextOptionDictionary([convertFromCIContextOption(CIContextOption.workingColorSpace): NSNull()]))
+            // Default CIContext renders with Metal (the old OpenGL ES context is deprecated)
+            let context = CIContext(options: [CIContextOption.workingColorSpace: NSNull()])
             cgImage = context.createCGImage(self.ciImage!, from: rect)
         }
 
@@ -115,15 +115,4 @@ extension UIImage {
 
         return UIImage(ciImage: lowContrast).crop(rect: ciImage.extent)
     }
-}
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertToOptionalCIContextOptionDictionary(_ input: [String: Any]?) -> [CIContextOption: Any]? {
-	guard let input = input else { return nil }
-	return Dictionary(uniqueKeysWithValues: input.map { key, value in (CIContextOption(rawValue: key), value)})
-}
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertFromCIContextOption(_ input: CIContextOption) -> String {
-	return input.rawValue
 }
