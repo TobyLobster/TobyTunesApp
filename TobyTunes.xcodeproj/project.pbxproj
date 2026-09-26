@@ -26,7 +26,6 @@
 		FF51F5AD1D21BD0400637E58 /* TTAlbumsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF51F5AC1D21BD0400637E58 /* TTAlbumsCollectionViewCell.swift */; };
 		FF51F5AF1D226AC300637E58 /* TTTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF51F5AE1D226AC300637E58 /* TTTabBarController.swift */; };
 		FF6D00071D1AE2FE004CB9F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF6D00061D1AE2FE004CB9F5 /* Assets.xcassets */; };
-		FF6D000A1D1AE2FE004CB9F5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF6D00081D1AE2FE004CB9F5 /* LaunchScreen.storyboard */; };
 		FF7434E61D547080005AD50B /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7434E51D547080005AD50B /* Player.swift */; };
 		FF7434E81D569BE2005AD50B /* ObserverPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7434E71D569BE2005AD50B /* ObserverPattern.swift */; };
 		FF87CA351D1AE3D3001A5945 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF87CA281D1AE3D3001A5945 /* AboutViewController.swift */; };
@@ -60,7 +59,6 @@
 		FF51F5AC1D21BD0400637E58 /* TTAlbumsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTAlbumsCollectionViewCell.swift; sourceTree = "<group>"; };
 		FF51F5AE1D226AC300637E58 /* TTTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTTabBarController.swift; sourceTree = "<group>"; };
 		FF6D00061D1AE2FE004CB9F5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		FF6D00091D1AE2FE004CB9F5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FF6D000B1D1AE2FE004CB9F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FF6DFFFA1D1AE2FE004CB9F5 /* TobyTunes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TobyTunes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF7434E51D547080005AD50B /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
@@ -124,7 +122,6 @@
 				AA00000000000000000000B1 /* SceneDelegate.swift */,
 				FF22501E1D33789B002D0066 /* Main.storyboard */,
 				FF6D00061D1AE2FE004CB9F5 /* Assets.xcassets */,
-				FF6D00081D1AE2FE004CB9F5 /* LaunchScreen.storyboard */,
 				FF6D000B1D1AE2FE004CB9F5 /* Info.plist */,
 			);
 			path = TobyTunes;
@@ -257,7 +254,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF6D000A1D1AE2FE004CB9F5 /* LaunchScreen.storyboard in Resources */,
 				FF6D00071D1AE2FE004CB9F5 /* Assets.xcassets in Resources */,
 				FF2250201D33789B002D0066 /* Main.storyboard in Resources */,
 			);
@@ -311,14 +307,6 @@
 			);
 			name = Main.storyboard;
 			path = ..;
-			sourceTree = "<group>";
-		};
-		FF6D00081D1AE2FE004CB9F5 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FF6D00091D1AE2FE004CB9F5 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

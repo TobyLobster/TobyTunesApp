@@ -22,8 +22,39 @@ class TTTabBarController: UITabBarController {
         "About":       ("info.circle",   "info.circle.fill"),
     ]
 
+    /// Neutral colour of the area around the tab bar (the strip above it and the space around its
+    /// capsule): soft grey in Light Mode, near-black grey in Dark Mode.
+    static let tabBarSurroundColour = UIColor { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor(red: 0x16/255.0, green: 0x16/255.0, blue: 0x18/255.0, alpha: 1)
+            : UIColor(red: 0xEE/255.0, green: 0xE5/255.0, blue: 0xEA/255.0, alpha: 1)
+    }
+
+    /// The tab bar itself: white in Light Mode, dark grey in Dark Mode, so it stands out from its surround.
+    static let tabBarColour = UIColor { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor(red: 0x2C/255.0, green: 0x2C/255.0, blue: 0x2E/255.0, alpha: 1)
+            : UIColor.white
+    }
+
+    /// Space between each screen's content and the tab bar.
+    static let tabBarMargin: CGFloat = 12
+
+    /// Strip in the tab bar's own colour just above it, so content never runs right up to the tab bar.
+    private let tabBarMarginView = UIView()
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        tabBarMarginView.backgroundColor = TTTabBarController.tabBarSurroundColour
+        view.backgroundColor = TTTabBarController.tabBarSurroundColour
+        tabBarMarginView.isUserInteractionEnabled = false
+        view.insertSubview(tabBarMarginView, belowSubview: tabBar)
+        // Every screen's safe area stops above the strip: lists leave room below their last row,
+        // and Now Playing's controls sit above it
+        for controller in viewControllers ?? [] {
+            controller.additionalSafeAreaInsets.bottom = TTTabBarController.tabBarMargin
+        }
 
         for controller in viewControllers ?? [] {
             if let title = controller.tabBarItem.title, let symbols = tabSymbols[title] {
@@ -34,12 +65,12 @@ class TTTabBarController: UITabBarController {
             (controller as? UINavigationController)?.navigationBar.prefersLargeTitles = true
         }
 
-        // Solid tab bar background (white in Light Mode, black in Dark Mode) instead of
+        // Solid tab bar background (white in Light Mode, dark grey in Dark Mode) instead of
         // see-through glass, so it looks the same over every screen, including Now Playing.
         // Both appearances are set: iOS falls back to glass for whichever one is left unset.
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor.systemBackground
+        appearance.backgroundColor = TTTabBarController.tabBarColour
         tabBar.standardAppearance = appearance
         tabBar.scrollEdgeAppearance = appearance
         tabBar.isTranslucent = false
@@ -70,6 +101,14 @@ class TTTabBarController: UITabBarController {
         tabBar.layoutIfNeeded()
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let margin = TTTabBarController.tabBarMargin
+        tabBarMarginView.frame = CGRect(x: 0, y: tabBar.frame.minY - margin, width: view.bounds.width, height: margin)
+        // Keep it above the screens (they're swapped in and out as tabs change) but below the tab bar
+        view.insertSubview(tabBarMarginView, belowSubview: tabBar)
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         // First chance to measure the titles at the tab bar's real on-screen size
@@ -91,6 +130,7 @@ class TTTabBarController: UITabBarController {
         let style: UIUserInterfaceStyle = traitCollection.userInterfaceStyle == .dark ? .dark : .light
         UIView.performWithoutAnimation {
             tabBar.overrideUserInterfaceStyle = style
+            tabBarMarginView.overrideUserInterfaceStyle = style
             tabBar.layoutIfNeeded()
         }
     }

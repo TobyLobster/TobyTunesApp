@@ -71,9 +71,8 @@ class NowPlayingViewController: UIViewController, Subscriber {
         forwardsButton?.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(longPressForwards)))
         backwardsButton?.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(longPressBackwards)))
 
-        // Touch gesture on image
-        artworkImageView?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTap)))
-        self.artworkButtonImage?.alpha = 0.0
+        // The play/pause overlay on the artwork is no longer used
+        self.artworkButtonImage?.isHidden = true
 
         // Player observer
         Player.sharedInstance.subscribe(subscriber: self)
@@ -399,26 +398,6 @@ class NowPlayingViewController: UIViewController, Subscriber {
             Player.sharedInstance.play()
             updatePlaybackStateUI()
             updateProgressUI(dragging: false)
-        }
-    }
-
-    @objc func imageTap(recognizer: UITapGestureRecognizer) {
-        playPause()
-
-        var image: UIImage? = nil
-        if Player.sharedInstance.playState() == .Playing {
-            image = NowPlayingViewController.symbol("play.fill", size: 90)
-        }
-        else {
-            image = NowPlayingViewController.symbol("pause.fill", size: 90)
-        }
-
-        if image != nil {
-            self.artworkButtonImage?.alpha = 0.65
-            self.artworkButtonImage?.image = image
-            UIView.animate( withDuration: 0.7, animations: {
-                self.artworkButtonImage?.alpha = 0.0
-            })
         }
     }
 
