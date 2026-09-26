@@ -10,30 +10,17 @@ import UIKit
 import CoreImage
 
 extension UIImage {
-    func imageWithBorders(width: Int, height: Int) -> UIImage {
-        let rect = CGRect(x: 0, y: 0, width: CGFloat(width), height: CGFloat(height))
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: rect.width, height: rect.height), true, 0)
-        //let context = UIGraphicsGetCurrentContext()
-        //let colour = CGColorCreate(CGColorSpaceCreateDeviceRGB(), [1.0, 1.0, 1.0, 1.0])
-        //CGContextClearRect(context, rect)
-        //CGContextSetFillColorWithColor(context, UIColor.clearColor().CGColor)
-        //CGContextFillRect(context, rect)
-        UIColor.white.setFill()
-        UIRectFill(rect)
-
-        var newRect: CGRect
-        if self.size.width > self.size.height {
-            let newHeight = Int(CGFloat(height) * self.size.height / self.size.width)
-            newRect = CGRect(x: 0, y: (height - newHeight) / 2, width: width, height: newHeight)
+    /// A square thumbnail `side` points across, filled edge to edge (non-square artwork is
+    /// cropped to its centre rather than letterboxed). Rounded corners come from the image view.
+    func squareThumbnail(side: Int) -> UIImage {
+        let size = CGSize(width: CGFloat(side), height: CGFloat(side))
+        let scale = max(size.width / max(self.size.width, 1), size.height / max(self.size.height, 1))
+        let drawSize = CGSize(width: self.size.width * scale, height: self.size.height * scale)
+        let origin = CGPoint(x: (size.width - drawSize.width) / 2, y: (size.height - drawSize.height) / 2)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { _ in
+            self.draw(in: CGRect(origin: origin, size: drawSize))
         }
-        else {
-            let newWidth = Int(CGFloat(width) * self.size.width / self.size.height)
-            newRect = CGRect(x: (width - newWidth) / 2, y: 0, width: newWidth, height: height)
-        }
-        self.draw(in: newRect)
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return newImage!
     }
 
     func oldImageWithGaussianBlur() -> UIImage {

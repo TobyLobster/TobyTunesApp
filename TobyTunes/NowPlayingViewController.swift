@@ -34,12 +34,19 @@ class NowPlayingViewController: UIViewController, Subscriber {
     @IBOutlet weak var timeRemainingLabel:  UILabel?
     @IBOutlet weak var titleView:           UIView?
     @IBOutlet weak var titleHeightConstraint: NSLayoutConstraint?
+    @IBOutlet weak var nextButton:          UIButton?
+    @IBOutlet weak var previousButton:      UIButton?
+    @IBOutlet weak var quietImageView:      UIImageView?
+    @IBOutlet weak var loudImageView:       UIImageView?
 
     var volumeView : ALVolumeView? = nil
     //var timer : NSTimer?
     var dragging = false
     var songTitle : String = ""
-    var thumbImage = UIImage(named: "sliderthumb")
+    var thumbImage = NowPlayingViewController.makeSliderThumb()
+    let backgroundGradient = CAGradientLayer()
+    var hasArtworkColours = false
+    var glassBackgrounds: [UIView] = []
     var cachedItem : MPMediaItem? = nil
     var cachedArtwork : MPMediaItemArtwork? = nil
     var pressingForward = false
@@ -49,12 +56,14 @@ class NowPlayingViewController: UIViewController, Subscriber {
 
     override func viewDidLoad() {
         self.title = songTitle
+        self.navigationItem.largeTitleDisplayMode = .never
         let backButton = UIBarButtonItem(title: "Back", style: UIBarButtonItem.Style.plain, target:self, action: #selector(back))
         self.navigationItem.leftBarButtonItem = backButton
 
         // Volume view
         volumeViewParent?.backgroundColor = UIColor.clear
         progressSlider?.setThumbImage(thumbImage, for: [])
+        applyNowPlayingStyle()
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(changedTextSize), name: UIContentSizeCategory.didChangeNotification, object:nil)
 
@@ -71,16 +80,17 @@ class NowPlayingViewController: UIViewController, Subscriber {
     }
 
     @objc func changedTextSize() {
-        self.titleLabel?.font           = Utilities.fontSized(originalSize: 17)
-        self.albumLabel?.font           = Utilities.fontSized(originalSize: 17)
-        self.artistLabel?.font          = Utilities.fontSized(originalSize: 17)
-        self.timeElapsedLabel?.font     = Utilities.fontSized(originalSize: 17)
-        self.timeRemainingLabel?.font   = Utilities.fontSized(originalSize: 17)
-        let myString: NSString = "Xg" as NSString
-        let size = myString.size(withAttributes: convertToOptionalNSAttributedStringKeyDictionary([convertFromNSAttributedStringKey(NSAttributedString.Key.font): Utilities.fontSized(originalSize: 17)!]))
-        let adjustedSize = CGSize(width: CGFloat(ceilf(Float(size.width))), height: CGFloat(ceilf(Float(size.height))))
+        let titleFont  = Utilities.fontSized(originalSize: 20, weight: .bold) ?? UIFont.boldSystemFont(ofSize: 20)
+        let detailFont = Utilities.fontSized(originalSize: 17) ?? UIFont.systemFont(ofSize: 17)
+        let timeFont   = UIFontMetrics(forTextStyle: .footnote).scaledFont(for: UIFont.monospacedDigitSystemFont(ofSize: 13, weight: .medium))
+        self.titleLabel?.font           = titleFont
+        self.albumLabel?.font           = detailFont
+        self.artistLabel?.font          = detailFont
+        self.timeElapsedLabel?.font     = timeFont
+        self.timeRemainingLabel?.font   = timeFont
 
-        titleHeightConstraint?.constant = CGFloat(3.0 * adjustedSize.height + 6.0)
+        // Title line, album and artist lines, and the 2pt gaps between them
+        titleHeightConstraint?.constant = ceil(titleFont.lineHeight) + 2 * ceil(detailFont.lineHeight) + 6
     }
 
     @objc func back() {
@@ -177,6 +187,7 @@ class NowPlayingViewController: UIViewController, Subscriber {
                 self.volumeView = ALVolumeView(frame: volumeViewParent.bounds)
                 if let volumeView = self.volumeView {
                     volumeView.setVolumeThumbImage(thumbImage, for: [])
+                    volumeView.tintColor = .white
                     volumeViewParent.addSubview(volumeView)
                     volumeView.sizeToFit()
                 }
@@ -188,13 +199,13 @@ class NowPlayingViewController: UIViewController, Subscriber {
         if let playPauseButton = playPauseButton {
             if Player.sharedInstance.playingTrack?.avPlayer.rate != 0 {
                 if playButtonImage != .Pause {
-                    playPauseButton.setImage(UIImage(named: "pause.pdf"), for: [])
+                    playPauseButton.setImage(NowPlayingViewController.symbol("pause.fill", size: 36), for: [])
                     playButtonImage = .Pause
                 }
             }
             else {
                 if playButtonImage != .Play {
-                    playPauseButton.setImage(UIImage(named: "play.pdf"), for: [])
+                    playPauseButton.setImage(NowPlayingViewController.symbol("play.fill", size: 36), for: [])
                     playButtonImage = .Play
                 }
             }
@@ -217,17 +228,16 @@ class NowPlayingViewController: UIViewController, Subscriber {
 
                     artworkImageView?.image = artworkImage
 
-                    if artworkImage != nil {
-                        if artworkImageView != nil {
-                            if (cachedArtwork != artwork) || (self.backgroundImageView?.image == nil) {
-                                cachedArtwork = artwork
-                                DispatchQueue.global(qos: .default).async {
-                                    let blurImage = artworkImage!.imageWithGaussianBlur()
-
-                                    DispatchQueue.main.async {
-                                            self.backgroundImageView?.image = blurImage
-                                        }
-                                    }
+                    if let image = artworkImage, (cachedArtwork != artwork) || !hasArtworkColours {
+                        cachedArtwork = artwork
+                        let itemID = currentItemID
+                        DispatchQueue.global(qos: .userInitiated).async {
+                            let colours = ArtworkColours.gradient(for: image)
+                            DispatchQueue.main.async {
+                                // Ignore a result for a track that's no longer playing (skipping quickly)
+                                guard self.cachedItem?.persistentID == itemID else { return }
+                                self.setBackground(top: colours.top, bottom: colours.bottom, animated: true)
+                                self.hasArtworkColours = true
                             }
                         }
                     }
@@ -397,10 +407,10 @@ class NowPlayingViewController: UIViewController, Subscriber {
 
         var image: UIImage? = nil
         if Player.sharedInstance.playState() == .Playing {
-            image = UIImage(named: "play")
+            image = NowPlayingViewController.symbol("play.fill", size: 90)
         }
         else {
-            image = UIImage(named: "pause")
+            image = NowPlayingViewController.symbol("pause.fill", size: 90)
         }
 
         if image != nil {
@@ -579,13 +589,185 @@ class NowPlayingViewController: UIViewController, Subscriber {
     }
 }
 
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
-	guard let input = input else { return nil }
-	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
-}
+// MARK: - Appearance
 
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
-	return input.rawValue
+extension NowPlayingViewController {
+    static let secondaryText = UIColor.white.withAlphaComponent(0.72)
+
+    /// A white SF Symbol at `size` points.
+    static func symbol(_ name: String, size: CGFloat, weight: UIImage.SymbolWeight = .semibold, colour: UIColor = .white) -> UIImage? {
+        let config = UIImage.SymbolConfiguration(pointSize: size, weight: weight)
+        return UIImage(systemName: name, withConfiguration: config)?.withTintColor(colour, renderingMode: .alwaysOriginal)
+    }
+
+    /// Thumb for the progress and volume sliders (shared with the About screen).
+    static func makeSliderThumb() -> UIImage {
+        return Utilities.sliderThumbImage()
+    }
+
+    func applyNowPlayingStyle() {
+        // Background: a gradient taken from the artwork (replaces the old blurred image)
+        backgroundImageView?.isHidden = true
+        view.backgroundColor = ArtworkColours.defaultGradient.bottom
+        backgroundGradient.startPoint = CGPoint(x: 0.5, y: 0)
+        backgroundGradient.endPoint = CGPoint(x: 0.5, y: 1)
+        view.layer.insertSublayer(backgroundGradient, at: 0)
+        setBackground(top: ArtworkColours.defaultGradient.top, bottom: ArtworkColours.defaultGradient.bottom, animated: false)
+
+        // Text
+        titleLabel?.textColor = .white
+        albumLabel?.textColor = NowPlayingViewController.secondaryText
+        artistLabel?.textColor = NowPlayingViewController.secondaryText
+        timeElapsedLabel?.textColor = NowPlayingViewController.secondaryText
+        timeRemainingLabel?.textColor = NowPlayingViewController.secondaryText
+
+        // Artwork: rounded corners, filled edge to edge, with a soft shadow from its container
+        artworkImageView?.contentMode = .scaleAspectFill
+        artworkImageView?.layer.cornerRadius = 14
+        artworkImageView?.layer.cornerCurve = .continuous
+        artworkImageView?.clipsToBounds = true
+        if let container = artworkImageView?.superview {
+            container.clipsToBounds = false
+            container.layer.shadowColor = UIColor.black.cgColor
+            container.layer.shadowOpacity = 0.45
+            container.layer.shadowRadius = 20
+            container.layer.shadowOffset = CGSize(width: 0, height: 12)
+        }
+        artworkButtonImage?.contentMode = .center
+
+        // Transport controls
+        previousButton?.setImage(NowPlayingViewController.symbol("backward.end.fill", size: 28), for: [])
+        backwardsButton?.setImage(NowPlayingViewController.symbol("gobackward.30", size: 31, weight: .medium), for: [])
+        forwardsButton?.setImage(NowPlayingViewController.symbol("goforward.30", size: 31, weight: .medium), for: [])
+        nextButton?.setImage(NowPlayingViewController.symbol("forward.end.fill", size: 28), for: [])
+        previousButton?.accessibilityLabel = "Previous track"
+        backwardsButton?.accessibilityLabel = "Back 30 seconds"
+        forwardsButton?.accessibilityLabel = "Forward 30 seconds"
+        nextButton?.accessibilityLabel = "Next track"
+        playPauseButton?.accessibilityLabel = "Play or pause"
+        if let playPauseButton = playPauseButton {
+            addGlassBackground(to: playPauseButton)
+        }
+
+        // Bookmark button: white outline when not bookmarked; accent-coloured with a tick when it is
+        if let bookmarkButton = bookmarkButton {
+            bookmarkButton.backgroundColor = .clear
+            bookmarkButton.setImage(NowPlayingViewController.symbol("bookmark", size: 24), for: .normal)
+            let bookmarked = NowPlayingViewController.bookmarkedImage()
+            bookmarkButton.setImage(bookmarked, for: .selected)
+            bookmarkButton.setImage(bookmarked, for: [.selected, .highlighted])
+            bookmarkButton.accessibilityLabel = "Bookmark"
+            addGlassBackground(to: bookmarkButton)
+        }
+
+        // Progress slider: slim white track
+        progressSlider?.minimumTrackTintColor = .white
+        progressSlider?.maximumTrackTintColor = UIColor.white.withAlphaComponent(0.25)
+
+        // Volume icons
+        quietImageView?.image = NowPlayingViewController.symbol("speaker.fill", size: 13, colour: NowPlayingViewController.secondaryText)
+        loudImageView?.image = NowPlayingViewController.symbol("speaker.wave.3.fill", size: 13, colour: NowPlayingViewController.secondaryText)
+        quietImageView?.contentMode = .center
+        loudImageView?.contentMode = .center
+
+        // Transparent navigation bar with white text over the gradient
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground()
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationItem.standardAppearance = appearance
+        navigationItem.scrollEdgeAppearance = appearance
+        navigationItem.leftBarButtonItem?.tintColor = .white
+    }
+
+    /// Bookmark icon for "bookmarked": a filled bookmark in the accent colour with a white tick on it.
+    static func bookmarkedImage() -> UIImage? {
+        let size: CGFloat = 24
+        guard let bookmark = UIImage(systemName: "bookmark.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: size, weight: .semibold)),
+              let tick = UIImage(systemName: "checkmark", withConfiguration: UIImage.SymbolConfiguration(pointSize: size * 0.5, weight: .heavy)) else {
+            return symbol("bookmark.fill", size: size)
+        }
+        // The deeper light-mode red: stands out on the dark background and keeps the white tick crisp
+        let fill = accentColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
+        let renderer = UIGraphicsImageRenderer(size: bookmark.size)
+        let image = renderer.image { _ in
+            bookmark.withTintColor(fill, renderingMode: .alwaysOriginal).draw(at: .zero)
+            // Tick centred slightly above the middle, clear of the bookmark's notch
+            let tickOrigin = CGPoint(x: (bookmark.size.width - tick.size.width) / 2,
+                                     y: (bookmark.size.height - tick.size.height) / 2 - bookmark.size.height * 0.08)
+            tick.withTintColor(.white, renderingMode: .alwaysOriginal).draw(at: tickOrigin)
+        }
+        return image.withRenderingMode(.alwaysOriginal)
+    }
+
+    /// Circular backing behind a button: Liquid Glass on iOS 26, a translucent disc before that.
+    func addGlassBackground(to button: UIButton) {
+        let backing: UIView
+        if #available(iOS 26.0, *) {
+            backing = UIVisualEffectView(effect: UIGlassEffect())
+        } else {
+            backing = UIView()
+            backing.backgroundColor = UIColor.white.withAlphaComponent(0.16)
+            backing.layer.borderColor = UIColor.white.withAlphaComponent(0.22).cgColor
+            backing.layer.borderWidth = 0.5
+        }
+        backing.isUserInteractionEnabled = false
+        backing.clipsToBounds = true
+        backing.frame = button.bounds
+        backing.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        button.insertSubview(backing, at: 0)
+        glassBackgrounds.append(backing)
+    }
+
+    func setBackground(top: UIColor, bottom: UIColor, animated: Bool) {
+        let colours = [top.cgColor, bottom.cgColor]
+        if animated {
+            let fade = CABasicAnimation(keyPath: "colors")
+            fade.fromValue = backgroundGradient.colors
+            fade.toValue = colours
+            fade.duration = 0.5
+            backgroundGradient.add(fade, forKey: "colors")
+        }
+        backgroundGradient.colors = colours
+        view.backgroundColor = bottom
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        backgroundGradient.frame = view.bounds
+        CATransaction.commit()
+
+        for backing in glassBackgrounds {
+            backing.layer.cornerRadius = min(backing.bounds.width, backing.bounds.height) / 2
+            if let button = backing.superview as? UIButton, let imageView = button.imageView {
+                button.bringSubviewToFront(imageView)
+            }
+        }
+
+        if let artwork = artworkImageView, let container = artwork.superview {
+            container.layer.shadowPath = UIBezierPath(roundedRect: artwork.frame, cornerRadius: 14).cgPath
+        }
+
+        spaceOutTransportControls()
+    }
+
+    /// Spreads the five transport buttons as far apart as the controls row allows, up to 24pt
+    /// between them (easier to hit), but never less than the original 9pt on narrow phones.
+    /// The play button stays centred; the gaps are the storyboard's button-to-button constraints.
+    func spaceOutTransportControls() {
+        let buttons = [previousButton, backwardsButton, playPauseButton, forwardsButton, nextButton].compactMap { $0 }
+        guard buttons.count == 5, let row = playPauseButton?.superview, row.bounds.width > 0 else { return }
+
+        let buttonWidths = buttons.reduce(CGFloat(0)) { $0 + $1.bounds.width }
+        let spacing = max(9, min(24, floor((row.bounds.width - buttonWidths) / 4)))
+
+        for constraint in row.constraints where constraint.firstAttribute == .leading && constraint.secondAttribute == .trailing {
+            let joinsTwoButtons = buttons.contains { $0 === constraint.firstItem } && buttons.contains { $0 === constraint.secondItem }
+            if joinsTwoButtons && constraint.constant != spacing {
+                constraint.constant = spacing
+            }
+        }
+    }
 }

@@ -64,7 +64,7 @@ class AlbumsViewController: UICollectionViewController, UICollectionViewDelegate
         let titleSize   = Utilities.measureText(text: title, attributes: Utilities.textTitleAttributes(), width: width - padding + 2)
         let detailsSize = Utilities.measureText(text: details, attributes: Utilities.textDetailsAttributes())
 
-        return CGSize(width: width, height: max(CGFloat(thumbnailHeight), ceil(titleSize.height) + ceil(detailsSize.height)) + 10)
+        return CGSize(width: width, height: max(CGFloat(thumbnailHeight), ceil(titleSize.height) + ceil(detailsSize.height)) + 16)
     }
 
     // --- Collection View ---
@@ -95,7 +95,7 @@ class AlbumsViewController: UICollectionViewController, UICollectionViewDelegate
             cell.albumName?.text = titleString(dataIndex: dataIndex)
             cell.albumDetails?.text = detailsString(dataIndex: dataIndex)
 
-            cell.albumArt?.image = UIImage(named: "logo44")
+            cell.albumArt?.image = UIImage(named: "logo")
             cell.albumPlay?.tag = dataIndex
 
             let rowItem      = albumsData.albums[dataIndex].representativeItem
@@ -103,18 +103,17 @@ class AlbumsViewController: UICollectionViewController, UICollectionViewDelegate
             let artwork      = rowItem?.artwork
             let artworkImage = MusicLibrary.resizeArtwork(artwork: artwork, fitWithinSize: thumbnailSize)
             if artworkImage != nil {
-                let artWithBorders = artworkImage!.imageWithBorders(width: thumbnailWidth, height: thumbnailHeight)
+                let artWithBorders = artworkImage!.squareThumbnail(side: thumbnailWidth)
                 cell.albumArt?.image = artWithBorders
             }
-            cell.albumName?.font = Utilities.fontSized(originalSize: 17)
-            cell.albumDetails?.font = Utilities.fontSized(originalSize: 15)
+            cell.albumName?.font = Utilities.rowTitleFont()
+            cell.albumDetails?.font = Utilities.rowDetailsFont()
             cell.albumPlay?.titleLabel?.font = Utilities.fontSized(originalSize: 15)
             cell.backgroundColor = Utilities.cellBackgroundColor(indexPath: indexPath, currentlyPlayingTableIndex: dataIndexToTableIndex(dataIndex: currentlyPlayingDataIndex) )
+            cell.albumName?.textColor = Utilities.cellTitleColor(indexPath: indexPath, currentlyPlayingTableIndex: dataIndexToTableIndex(dataIndex: currentlyPlayingDataIndex) )
 
             // "Selected" state
-            let backgroundView = UIView()
-            backgroundView.backgroundColor = UIColor(red: 0.0/255.0, green:0.0/255.0, blue:0.0/255.0, alpha:15/255.0)
-            cell.selectedBackgroundView = backgroundView
+            cell.selectedBackgroundView = Utilities.selectedCellBackgroundView()
             return cell
         }
         return cell
@@ -170,7 +169,7 @@ class AlbumsViewController: UICollectionViewController, UICollectionViewDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         let bgColourView = UIView()
-        bgColourView.backgroundColor = UIColor.white
+        bgColourView.backgroundColor = UIColor.systemBackground
         self.collectionView?.backgroundView = bgColourView
 
         // Player observer

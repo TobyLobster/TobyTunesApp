@@ -14,4 +14,9 @@ class TTAlbumsCollectionViewCell : UICollectionViewCell {
     @IBOutlet weak var albumDetails: UILabel?
     @IBOutlet weak var albumArt: UIImageView?
     @IBOutlet weak var albumPlay: UIButton?
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        Utilities.styleThumbnail(albumArt)
+        Utilities.styleRowButton(albumPlay, systemName: "play.circle.fill", accessibilityLabel: "Play album")
+    }
 }

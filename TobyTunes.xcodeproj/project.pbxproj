@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA00000000000000000000D2 /* ArtworkColours.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000000000000000000D1 /* ArtworkColours.swift */; };
 		AA00000000000000000000C2 /* AudioFilterTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000000000000000000C1 /* AudioFilterTap.swift */; };
 		AA00000000000000000000B2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000000000000000000B1 /* SceneDelegate.swift */; };
 		AA00000000000000000000A3 /* MarqueeLabel in Frameworks */ = {isa = PBXBuildFile; productRef = AA00000000000000000000A2 /* MarqueeLabel */; };
@@ -41,6 +42,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA00000000000000000000D1 /* ArtworkColours.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtworkColours.swift; sourceTree = "<group>"; };
 		AA00000000000000000000C1 /* AudioFilterTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFilterTap.swift; sourceTree = "<group>"; };
 		AA00000000000000000000B1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		FF2250141D2F90C6002D0066 /* TTArtistsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTArtistsCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				FF87CA2E1D1AE3D3001A5945 /* Constants.swift */,
 				FF7434E71D569BE2005AD50B /* ObserverPattern.swift */,
 				FF87CA341D1AE3D3001A5945 /* Utilities.swift */,
+				AA00000000000000000000D1 /* ArtworkColours.swift */,
 				FF87CA331D1AE3D3001A5945 /* UIImage+Margins.swift */,
 				FF2250181D311AC5002D0066 /* TTSegue.swift */,
 				FF51F5AE1D226AC300637E58 /* TTTabBarController.swift */,
@@ -270,6 +273,7 @@
 				FF2250221D337D33002D0066 /* GenresViewController.swift in Sources */,
 				FF87CA3A1D1AE3D3001A5945 /* ArtistsViewController.swift in Sources */,
 				FF87CA411D1AE3D3001A5945 /* Utilities.swift in Sources */,
+				AA00000000000000000000D2 /* ArtworkColours.swift in Sources */,
 				FF2250281D379558002D0066 /* MusicLibrary.swift in Sources */,
 				FF87CA391D1AE3D3001A5945 /* AppDelegate.swift in Sources */,
 				AA00000000000000000000B2 /* SceneDelegate.swift in Sources */,
@@ -413,6 +417,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -436,6 +441,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;

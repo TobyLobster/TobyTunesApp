@@ -103,65 +103,37 @@ struct Utilities {
     }
 
     
-    static func scaledHeight(originalHeight: Float) -> Float {
-        // choose the font size
-        var newHeight = originalHeight
-        let contentSize = UIApplication.shared.preferredContentSizeCategory
-
-        switch( contentSize ) {
-        case UIContentSizeCategory.extraSmall:
-            newHeight = (12.0/16.0) * originalHeight
-        case UIContentSizeCategory.small:
-            newHeight = (14.0/16.0) * originalHeight
-        case UIContentSizeCategory.medium:
-            newHeight = (16.0/16.0) * originalHeight
-        case UIContentSizeCategory.large:
-            newHeight = (18.0/16.0) * originalHeight
-        case UIContentSizeCategory.extraLarge:
-            newHeight = (20.0/16.0) * originalHeight
-        case UIContentSizeCategory.extraExtraLarge:
-            newHeight = (22.0/16.0) * originalHeight
-        case UIContentSizeCategory.extraExtraExtraLarge:
-            newHeight = (24.0/16.0) * originalHeight
-        case UIContentSizeCategory.accessibilityMedium:
-            newHeight = (26.0/16.0) * originalHeight
-        case UIContentSizeCategory.accessibilityLarge:
-            newHeight = (28.0/16.0) * originalHeight
-        case UIContentSizeCategory.accessibilityExtraLarge:
-            newHeight = (30.0/16.0) * originalHeight
-        case UIContentSizeCategory.accessibilityExtraExtraLarge:
-            newHeight = (32.0/16.0) * originalHeight
-        case UIContentSizeCategory.accessibilityExtraExtraExtraLarge:
-            newHeight = (34.0/16.0) * originalHeight
-        default:
-            newHeight = originalHeight
-        }
-
-        return newHeight
-    }
-
-    static func fontSized(originalSize: Float) -> UIFont? {
-        // choose the font size
-        let fontSize = scaledHeight(originalHeight: originalSize)
-        return UIFont.systemFont(ofSize: CGFloat(fontSize))
+    /// System font at `originalSize` points (its size at the default text size setting),
+    /// scaled with the user's Dynamic Type setting, including the accessibility sizes.
+    static func fontSized(originalSize: Float, weight: UIFont.Weight = .regular) -> UIFont? {
+        let base = UIFont.systemFont(ofSize: CGFloat(originalSize), weight: weight)
+        return UIFontMetrics(forTextStyle: .body).scaledFont(for: base)
     }
 
     static func boldFontSized(originalSize: Float) -> UIFont? {
-        // choose the font size
-        let fontSize = scaledHeight(originalHeight: originalSize)
-        return UIFont.boldSystemFont(ofSize: CGFloat(fontSize))
+        return fontSized(originalSize: originalSize, weight: .bold)
+    }
+
+    /// Font for the main line of a list row (artist, album, genre, track or bookmark name).
+    static func rowTitleFont() -> UIFont? {
+        return fontSized(originalSize: 17, weight: .semibold)
+    }
+
+    /// Font for the secondary line of a list row.
+    static func rowDetailsFont() -> UIFont? {
+        return fontSized(originalSize: 15)
     }
 
     static func textTitleAttributes() -> [String : Any] {
         let style = NSMutableParagraphStyle()
         style.headIndent = 0
-        return [convertFromNSAttributedStringKey(NSAttributedString.Key.font): Utilities.fontSized(originalSize: 17)! as Any, convertFromNSAttributedStringKey(NSAttributedString.Key.paragraphStyle): style]
+        return [convertFromNSAttributedStringKey(NSAttributedString.Key.font): Utilities.rowTitleFont()! as Any, convertFromNSAttributedStringKey(NSAttributedString.Key.paragraphStyle): style]
     }
 
     static func textDetailsAttributes() -> [String : Any] {
         let style = NSMutableParagraphStyle()
         style.headIndent = 0
-        return [convertFromNSAttributedStringKey(NSAttributedString.Key.font): Utilities.fontSized(originalSize: 15)! as Any, convertFromNSAttributedStringKey(NSAttributedString.Key.paragraphStyle): style]
+        return [convertFromNSAttributedStringKey(NSAttributedString.Key.font): Utilities.rowDetailsFont()! as Any, convertFromNSAttributedStringKey(NSAttributedString.Key.paragraphStyle): style]
     }
 
     static func measureText(text: String, attributes: [String : Any], width: CGFloat = CGFloat.greatestFiniteMagnitude) -> CGSize {
@@ -236,11 +208,62 @@ struct Utilities {
         return max(1, Int(availableWidthInches / minColumnWidthInches))
     }
 
+    /// Row background: a light accent tint for the item that's playing, otherwise clear.
     static func cellBackgroundColor(indexPath: IndexPath, currentlyPlayingTableIndex: Int) -> UIColor {
         if currentlyPlayingTableIndex == indexPath.row {
-            return UIColor(red: 230.0/255.0, green:230.0/255.0, blue:230.0/255.0, alpha:1)
+            return UIColor { traits in
+                accentColor.resolvedColor(with: traits).withAlphaComponent(traits.userInterfaceStyle == .dark ? 0.22 : 0.10)
+            }
         }
-        return UIColor(red: 255.0/255.0, green:255.0/255.0, blue:255.0/255.0, alpha:0.0)
+        return UIColor.clear
+    }
+
+    /// Row title colour: the accent colour for the item that's playing, otherwise the normal label colour.
+    static func cellTitleColor(indexPath: IndexPath, currentlyPlayingTableIndex: Int) -> UIColor {
+        return currentlyPlayingTableIndex == indexPath.row ? accentColor : UIColor.label
+    }
+
+    /// Rounded, edge-to-edge artwork thumbnail.
+    static func styleThumbnail(_ imageView: UIImageView?) {
+        imageView?.contentMode = .scaleAspectFill
+        imageView?.layer.cornerRadius = thumbnailCornerRadius
+        imageView?.layer.cornerCurve = .continuous
+        imageView?.clipsToBounds = true
+    }
+
+    /// Replaces a row's text button ("Play", "More…") with a filled SF Symbol in the accent colour.
+    static func styleRowButton(_ button: UIButton?, systemName: String, accessibilityLabel: String) {
+        guard let button = button else { return }
+        let config = UIImage.SymbolConfiguration(pointSize: 30, weight: .regular)
+        button.setTitle(nil, for: .normal)
+        button.setImage(UIImage(systemName: systemName, withConfiguration: config), for: .normal)
+        button.tintColor = accentColor
+        button.accessibilityLabel = accessibilityLabel
+    }
+
+    /// The app's slider thumb: a white circle with a soft shadow and a hairline edge.
+    static func sliderThumbImage() -> UIImage {
+        let diameter: CGFloat = 20
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: diameter + 6, height: diameter + 6))
+        return renderer.image { context in
+            let rect = CGRect(x: 3, y: 3, width: diameter, height: diameter)
+            context.cgContext.saveGState()
+            context.cgContext.setShadow(offset: CGSize(width: 0, height: 1), blur: 2, color: UIColor.black.withAlphaComponent(0.3).cgColor)
+            UIColor.white.setFill()
+            UIBezierPath(ovalIn: rect).fill()
+            context.cgContext.restoreGState()
+            UIColor.black.withAlphaComponent(0.12).setStroke()
+            let edge = UIBezierPath(ovalIn: rect.insetBy(dx: 0.25, dy: 0.25))
+            edge.lineWidth = 0.5
+            edge.stroke()
+        }
+    }
+
+    /// Background shown while a row is being tapped.
+    static func selectedCellBackgroundView() -> UIView {
+        let view = UIView()
+        view.backgroundColor = UIColor.label.withAlphaComponent(0.08)
+        return view
     }
 
     static func applicationDataDirectory() -> URL? {

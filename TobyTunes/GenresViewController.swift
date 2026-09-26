@@ -85,13 +85,12 @@ class GenresViewController: UICollectionViewController, UICollectionViewDelegate
 
         cell.textLabel!.text        = titleString(dataIndex: tableIndexToDataIndex(tableIndex: indexPath.row))
         cell.detailTextLabel?.text  = detailsString(dataIndex: tableIndexToDataIndex(tableIndex: indexPath.row))
-        cell.textLabel!.font        = Utilities.fontSized(originalSize: 17)
-        cell.detailTextLabel!.font  = Utilities.fontSized(originalSize: 15)
+        cell.textLabel!.font        = Utilities.rowTitleFont()
+        cell.detailTextLabel!.font  = Utilities.rowDetailsFont()
         cell.backgroundColor        = Utilities.cellBackgroundColor(indexPath: indexPath, currentlyPlayingTableIndex: dataIndexToTableIndex(dataIndex: currentlyPlayingDataIndex))
+        cell.textLabel?.textColor   = Utilities.cellTitleColor(indexPath: indexPath, currentlyPlayingTableIndex: dataIndexToTableIndex(dataIndex: currentlyPlayingDataIndex))
 
-        let backgroundView = UIView()
-        backgroundView.backgroundColor = UIColor(red: 0.0/255.0, green:0.0/255.0, blue:0.0/255.0, alpha:15/255.0)
-        cell.selectedBackgroundView = backgroundView
+        cell.selectedBackgroundView = Utilities.selectedCellBackgroundView()
 
         return cell
     }
@@ -111,7 +110,7 @@ class GenresViewController: UICollectionViewController, UICollectionViewDelegate
     // --- View ---
     override func viewDidLoad() {
         let bgColourView = UIView()
-        bgColourView.backgroundColor = UIColor.white
+        bgColourView.backgroundColor = UIColor.systemBackground
         self.collectionView?.backgroundView = bgColourView
 
         // Player observer

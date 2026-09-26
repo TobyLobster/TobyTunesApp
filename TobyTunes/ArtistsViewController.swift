@@ -62,7 +62,7 @@ class ArtistsViewController: UICollectionViewController, UICollectionViewDelegat
         let titleSize   = Utilities.measureText(text: title, attributes: Utilities.textTitleAttributes(), width: width - padding + 2)
         let detailsSize = Utilities.measureText(text: details, attributes: Utilities.textDetailsAttributes())
 
-        return CGSize(width: width, height: max(CGFloat(thumbnailHeight), ceil(titleSize.height) + ceil(detailsSize.height)) + 10)
+        return CGSize(width: width, height: max(CGFloat(thumbnailHeight), ceil(titleSize.height) + ceil(detailsSize.height)) + 16)
     }
 
     // --- Collection View ---
@@ -93,25 +93,24 @@ class ArtistsViewController: UICollectionViewController, UICollectionViewDelegat
             cell.artistName?.text = titleString(dataIndex: dataIndex)
             cell.artistDetails?.text = detailsString(dataIndex: dataIndex)
 
-            cell.artistArt?.image = UIImage(named: "logo44")
+            cell.artistArt?.image = UIImage(named: "logo")
             cell.artistPlay?.tag = dataIndex
 
             let rowItem      = artistsData.artists[dataIndex].representativeItem
             let artwork      = rowItem?.artwork
             let artworkImage = MusicLibrary.resizeArtwork(artwork: artwork, fitWithinSize: thumbnailSize)
             if artworkImage != nil {
-                let artWithBorders = artworkImage!.imageWithBorders(width: thumbnailWidth, height: thumbnailHeight)
+                let artWithBorders = artworkImage!.squareThumbnail(side: thumbnailWidth)
                 cell.artistArt?.image = artWithBorders
             }
-            cell.artistName?.font = Utilities.fontSized(originalSize: 17)
-            cell.artistDetails?.font = Utilities.fontSized(originalSize: 15)
+            cell.artistName?.font = Utilities.rowTitleFont()
+            cell.artistDetails?.font = Utilities.rowDetailsFont()
             cell.artistPlay?.titleLabel?.font = Utilities.fontSized(originalSize: 15)
             cell.backgroundColor = Utilities.cellBackgroundColor(indexPath: indexPath, currentlyPlayingTableIndex: dataIndexToTableIndex(dataIndex: currentlyPlayingDataIndex))
+            cell.artistName?.textColor = Utilities.cellTitleColor(indexPath: indexPath, currentlyPlayingTableIndex: dataIndexToTableIndex(dataIndex: currentlyPlayingDataIndex))
 
             // "Selected" state
-            let backgroundView = UIView()
-            backgroundView.backgroundColor = UIColor(red: 0.0/255.0, green:0.0/255.0, blue:0.0/255.0, alpha:15/255.0)
-            cell.selectedBackgroundView = backgroundView
+            cell.selectedBackgroundView = Utilities.selectedCellBackgroundView()
 
             return cell
         }
@@ -169,7 +168,7 @@ class ArtistsViewController: UICollectionViewController, UICollectionViewDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         let bgColourView = UIView()
-        bgColourView.backgroundColor = UIColor.white
+        bgColourView.backgroundColor = UIColor.systemBackground
         self.collectionView?.backgroundView = bgColourView
 
         // Player observer

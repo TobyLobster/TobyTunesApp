@@ -20,6 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // The storyboard (UISceneStoryboardFile) creates the window and root view controller automatically.
         guard scene is UIWindowScene else { return }
+        window?.tintColor = accentColor
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {

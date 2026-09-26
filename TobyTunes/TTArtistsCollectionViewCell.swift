@@ -14,4 +14,9 @@ class TTArtistsCollectionViewCell : UICollectionViewCell {
     @IBOutlet weak var artistDetails: UILabel?
     @IBOutlet weak var artistArt: UIImageView?
     @IBOutlet weak var artistPlay: UIButton?
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        Utilities.styleThumbnail(artistArt)
+        Utilities.styleRowButton(artistPlay, systemName: "play.circle.fill", accessibilityLabel: "Play artist")
+    }
 }

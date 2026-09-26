@@ -43,7 +43,8 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDeleg
         let titleSize   = Utilities.measureText(text: title, attributes: Utilities.textTitleAttributes(), width: width - padding + 2)
         let detailsSize = Utilities.measureText(text: details, attributes: Utilities.textDetailsAttributes())
 
-        return CGSize(width: width, height: max(CGFloat(thumbnailHeight), ceil(titleSize.height) + ceil(detailsSize.height)) + 10)
+        // Title and details, then 6pt, the 4pt progress bar and 8pt below it
+        return CGSize(width: width, height: max(CGFloat(thumbnailHeight) + 16, ceil(titleSize.height) + ceil(detailsSize.height) + 26))
     }
 
     func tableIndexToDataIndex(tableIndex: Int) -> Int {
@@ -86,7 +87,7 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDeleg
             if let mark = Bookmarks.getBookmarkAtIndex(index: dataIndex) {
                 let playlist = mark.playlist
 
-                cell.bookmarkArt?.image = UIImage(named: "logo44")
+                cell.bookmarkArt?.image = UIImage(named: "logo")
                 cell.bookmarkPlay?.tag = mark.id
                 cell.tag = mark.id
 
@@ -95,12 +96,12 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDeleg
                     let artwork      = items[0].artwork
                     let artworkImage = MusicLibrary.resizeArtwork(artwork: artwork, fitWithinSize: thumbnailSize)
                     if artworkImage != nil {
-                        let artWithBorders = artworkImage!.imageWithBorders(width: thumbnailWidth, height: thumbnailHeight)
+                        let artWithBorders = artworkImage!.squareThumbnail(side: thumbnailWidth)
                         cell.bookmarkArt?.image = artWithBorders
                     }
                 }
-                cell.bookmarkName?.font = Utilities.fontSized(originalSize: 17)
-                cell.bookmarkDetails?.font = Utilities.fontSized(originalSize: 15)
+                cell.bookmarkName?.font = Utilities.rowTitleFont()
+                cell.bookmarkDetails?.font = Utilities.rowDetailsFont()
                 cell.bookmarkPlay?.titleLabel?.font = Utilities.fontSized(originalSize: 15)
 
                 if let bookmark = Bookmarks.getBookmarkAtIndex(index: dataIndex) {
@@ -119,6 +120,7 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDeleg
                     }
 
                     cell.backgroundColor = Utilities.cellBackgroundColor(indexPath: indexPath, currentlyPlayingTableIndex: currentlyPlayingIndex)
+                    cell.bookmarkName?.textColor = Utilities.cellTitleColor(indexPath: indexPath, currentlyPlayingTableIndex: currentlyPlayingIndex)
                 }
                 //if let oldFrame = cell.bookmarkProgress?.frame {
                 //    let newFrame = CGRect(x: oldFrame.minX, y: oldFrame.minY, width: collectionView.frame.width, height: oldFrame.height)
@@ -224,7 +226,7 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         let bgColourView = UIView()
-        bgColourView.backgroundColor = UIColor.white
+        bgColourView.backgroundColor = UIColor.systemBackground
         self.collectionView?.backgroundView = bgColourView
 
         Player.sharedInstance.subscribe(subscriber: self)

@@ -15,6 +15,12 @@ class AboutViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor.systemBackground
+
+        // Same slider style as Now Playing, with the accent colour for the filled part
+        agcSlider?.setThumbImage(Utilities.sliderThumbImage(), for: [])
+        agcSlider?.minimumTrackTintColor = accentColor
+        agcSlider?.maximumTrackTintColor = UIColor.systemFill
 
         // Do any additional setup after loading the view, typically from a nib.
         let appVersionString = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String

@@ -10,6 +10,17 @@ import Foundation
 import UIKit
 
 class NowPlayingNavigationController : UINavigationController, UINavigationBarDelegate {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Now Playing always sits on a dark, artwork-coloured background, whatever the system setting
+        overrideUserInterfaceStyle = .dark
+        navigationBar.tintColor = .white
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
     func navigationController(navigationController: UINavigationController, willShowViewController viewController: UIViewController, animated: Bool) {
         //print("hello")
     }
