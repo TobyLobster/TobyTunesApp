@@ -18,8 +18,8 @@ class TTTabBarController: UITabBarController {
         "Genres":      ("square.stack",  "square.stack.fill"),
         "Artists":     ("music.mic",     "music.mic"),
         "Now Playing": ("play.circle",   "play.circle.fill"),
+        "Playlists":   ("music.note.list", "music.note.list"),
         "Bookmarks":   ("bookmark",      "bookmark.fill"),
-        "About":       ("info.circle",   "info.circle.fill"),
     ]
 
     /// Neutral colour of the area around the tab bar (the strip above it and the space around its
@@ -45,6 +45,9 @@ class TTTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        addPlaylistsTab()
+        addAboutButtons()
 
         tabBarMarginView.backgroundColor = TTTabBarController.tabBarSurroundColour
         view.backgroundColor = TTTabBarController.tabBarSurroundColour
@@ -88,6 +91,39 @@ class TTTabBarController: UITabBarController {
             // Go to now playing tab
             self.selectedIndex = nowPlayingTabIndex
         }
+    }
+
+    /// The Playlists tab is built in code, and goes between Now Playing and Bookmarks.
+    private func addPlaylistsTab() {
+        let playlistsNavigationController = UINavigationController(rootViewController: PlaylistsViewController())
+        playlistsNavigationController.tabBarItem = UITabBarItem(title: "Playlists", image: nil, tag: 1007)
+        var controllers = viewControllers ?? []
+        controllers.insert(playlistsNavigationController, at: min(nowPlayingTabIndex + 1, controllers.count))
+        setViewControllers(controllers, animated: false)
+    }
+
+    /// About opens from an ⓘ button at the top right of each list screen, rather than having a tab.
+    private func addAboutButtons() {
+        for controller in viewControllers ?? [] {
+            guard let navigationController = controller as? UINavigationController,
+                  !(navigationController is NowPlayingNavigationController),
+                  let rootController = navigationController.viewControllers.first else { continue }
+            let aboutButton = UIBarButtonItem(image: UIImage(systemName: "info.circle"), style: .plain,
+                                              target: self, action: #selector(showAbout))
+            aboutButton.accessibilityLabel = "About"
+            rootController.navigationItem.rightBarButtonItem = aboutButton
+        }
+    }
+
+    /// Shows About as a sheet, with a Done button to close it.
+    @objc func showAbout() {
+        guard let aboutController = storyboard?.instantiateViewController(withIdentifier: "About") else { return }
+        aboutController.navigationItem.title = "About"
+        aboutController.navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .done, primaryAction: UIAction { [weak self] _ in
+            self?.dismiss(animated: true)
+        })
+        let navigationController = UINavigationController(rootViewController: aboutController)
+        present(navigationController, animated: true)
     }
 
     /// iOS 26 can measure the tab titles before the tab bar has finished laying out when it has

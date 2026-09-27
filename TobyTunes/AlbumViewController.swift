@@ -136,6 +136,26 @@ class AlbumViewController: UICollectionViewController, UICollectionViewDelegateF
         }
     }
 
+    // --- Long-press menu ---
+    override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
+        guard indexPaths.count == 1, let indexPath = indexPaths.first else { return nil }
+        let dataIndex = tableIndexToDataIndex(tableIndex: indexPath.row)
+        guard dataIndex >= 0, dataIndex < singleAlbumData.items.count else { return nil }
+        let item = singleAlbumData.items[dataIndex]
+        let name = Utilities.getTrackDisplayName(track: item.title)
+        let songs = { () -> [MPMediaItem] in [item] }
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+            let add = UIAction(title: "Add to Playlist…", image: UIImage(systemName: "text.badge.plus")) { _ in
+                guard let self = self else { return }
+                let items = songs()
+                PlaylistActions.addToPlaylist(trackIDs: items.map { $0.persistentID },
+                                              summary: PlaylistActions.summary(name: name, count: items.count),
+                                              from: self)
+            }
+            return UIMenu(title: "", children: [add])
+        }
+    }
+
     // --- View ---
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -144,12 +164,14 @@ class AlbumViewController: UICollectionViewController, UICollectionViewDelegateF
         self.collectionView?.backgroundView = bgColourView
         self.title = albumTitle
 
-        // Player observer
-        Player.sharedInstance.subscribe(subscriber: self)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // Player observer, only while on screen: the player holds on to its observers, so a screen that
+        // stayed subscribed would never be freed after going back
+        Player.sharedInstance.unsubscribe(subscriber: self)
+        Player.sharedInstance.subscribe(subscriber: self)
 
         if albumTitle != "" {
             self.navigationItem.title = albumTitle
@@ -179,6 +201,8 @@ class AlbumViewController: UICollectionViewController, UICollectionViewDelegateF
     }
 
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        Player.sharedInstance.unsubscribe(subscriber: self)
         //unregisterForNotifications()
     }
 

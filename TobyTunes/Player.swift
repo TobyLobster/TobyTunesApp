@@ -12,6 +12,8 @@ import MediaPlayer
 
 struct PlayerTrack {
     var persistentID: UInt64
+    /// Position in the list's normal (unshuffled) order, so shuffle can be turned off again.
+    var sourceIndex: Int = 0
 }
 
 struct PlayerQueue {
@@ -322,20 +324,85 @@ class Player : NSObject, Observer {
         }
     }
 
+    /// Position of the playing track in the queue. It's tracked directly rather than found by searching
+    /// for the track, so a song that appears more than once in a playlist keeps its place.
+    private(set) var currentIndex: Int? = nil
+
+    /// Whether the queue is in shuffled order.
+    private(set) var isShuffled = false
+
     var indexNowPlaying: Int? {
         get {
-            if playingTrack != nil {
-                return queue.findTrackIndex(persistentID: playingTrack!.persistentID)
-            }
-            return nil
+            guard playingTrack != nil, let index = currentIndex, index < queue.tracks.count else { return nil }
+            return index
         }
     }
 
+    /// The queue's songs in play order.
+    var queueItemIDs: [UInt64] {
+        return queue.tracks.map { $0.persistentID }
+    }
+
+    /// The queue's songs in their normal order, i.e. the order with shuffle turned off.
+    var unshuffledItemIDs: [UInt64] {
+        return queue.tracks.sorted { $0.sourceIndex < $1.sourceIndex }.map { $0.persistentID }
+    }
+
     func setQueue(items: [UInt64]) {
-        queue.tracks.removeAll()
-        for item in items {
-            queue.tracks.append(PlayerTrack(persistentID: item))
+        queue.tracks = items.enumerated().map { PlayerTrack(persistentID: $0.element, sourceIndex: $0.offset) }
+        currentIndex = nil
+        isShuffled = false
+    }
+
+    /// Sets a queue that's already shuffled, e.g. when resuming a shuffled bookmark. `unshuffled` is the
+    /// list's normal order, so shuffle can be turned off later.
+    func setQueue(items: [UInt64], unshuffled: [UInt64]) {
+        // Where each song appears in the normal order (a song can appear more than once)
+        var positions: [UInt64: [Int]] = [:]
+        for (index, itemID) in unshuffled.enumerated() {
+            positions[itemID, default: []].append(index)
         }
+        var extra = unshuffled.count
+        queue.tracks = items.map { (itemID: UInt64) -> PlayerTrack in
+            if var slots = positions[itemID], !slots.isEmpty {
+                let slot = slots.removeFirst()
+                positions[itemID] = slots
+                return PlayerTrack(persistentID: itemID, sourceIndex: slot)
+            }
+            // Not in the normal order: put it at the end
+            extra += 1
+            return PlayerTrack(persistentID: itemID, sourceIndex: extra)
+        }
+        currentIndex = nil
+        isShuffled = true
+    }
+
+    /// Turns shuffle on or off. Turning it on keeps the playing song (moved to the front of the queue) and
+    /// puts every other song after it in a random order; with nothing playing, the whole queue is shuffled.
+    /// Turning it off goes back to the normal order, carrying on from the playing song.
+    func setShuffle(_ on: Bool) {
+        guard on != isShuffled else { return }
+        if on {
+            var others = queue.tracks
+            var first: [PlayerTrack] = []
+            if let index = indexNowPlaying {
+                first = [others.remove(at: index)]
+            }
+            queue.tracks = first + others.shuffled()
+            currentIndex = first.isEmpty ? nil : 0
+        }
+        else {
+            let playingSourceIndex = indexNowPlaying.map { queue.tracks[$0].sourceIndex }
+            queue.tracks.sort { $0.sourceIndex < $1.sourceIndex }
+            if let sourceIndex = playingSourceIndex {
+                currentIndex = queue.tracks.firstIndex { $0.sourceIndex == sourceIndex }
+            }
+            else {
+                currentIndex = nil
+            }
+        }
+        isShuffled = on
+        informObservers(reason: "updateShuffle")
     }
 
     func configureNowPlayingInfo(item: MPMediaItem) {
@@ -381,8 +448,25 @@ class Player : NSObject, Observer {
         }
     }
 
+    /// Loads the song at a position in the queue.
+    @discardableResult
+    func setTrack(index: Int) -> Bool {
+        guard index >= 0, index < queue.tracks.count else { return false }
+        return loadTrack(persistentID: queue.tracks[index].persistentID, index: index)
+    }
+
+    /// Loads a song by ID. If it's in the queue more than once, the first one is used (unless it's the
+    /// one already playing); use setTrack(index:) to pick a particular one.
     @discardableResult
     func setTrack(persistentID: UInt64) -> Bool {
+        var index = queue.findTrackIndex(persistentID: persistentID)
+        if let current = currentIndex, current < queue.tracks.count, queue.tracks[current].persistentID == persistentID {
+            index = current
+        }
+        return loadTrack(persistentID: persistentID, index: index)
+    }
+
+    private func loadTrack(persistentID: UInt64, index: Int?) -> Bool {
         // Get media item from persistent ID
         if let mediaItem = MusicLibrary.getMediaItems(itemIDs: [persistentID]).first {
             // Get asset URL from media item. NOTE: AssetURL can be nil for DRM/iCloud/partially downloaded tracks!
@@ -394,6 +478,7 @@ class Player : NSObject, Observer {
                 else {
                     playingTrack?.replaceURL(URL: assetURL, persistentID: persistentID)
                 }
+                currentIndex = index
                 configureNowPlayingInfo(item: mediaItem)
                 informObservers(reason: "updateTrack")
                 isFastPlaying = false
@@ -418,7 +503,7 @@ class Player : NSObject, Observer {
         }
 
         // Play first item in queue
-        if setTrack(persistentID: queue.tracks[0].persistentID) {
+        if setTrack(index: 0) {
             playingTrack?.play()
             return true
         }
@@ -524,12 +609,11 @@ class Player : NSObject, Observer {
 
     @discardableResult
     func skipToNextItem() -> Bool {
-        guard let persistentID = playingTrack?.persistentID else { return false }
-        guard let index = queue.findTrackIndex(persistentID: persistentID) else { return false }
+        guard let index = indexNowPlaying else { return false }
 
         let nextIndex = index + 1
         if nextIndex < queue.tracks.count {
-            setTrack(persistentID: queue.tracks[nextIndex].persistentID)
+            setTrack(index: nextIndex)
             play()
             return true
         }
@@ -539,12 +623,11 @@ class Player : NSObject, Observer {
 
     @discardableResult
     func skipToPreviousItem() -> Bool {
-        guard let persistentID = playingTrack?.persistentID else { return false }
-        guard let index = queue.findTrackIndex(persistentID: persistentID) else { return false }
+        guard let index = indexNowPlaying else { return false }
 
         if index > 0 {
             let prevIndex = index - 1
-            setTrack(persistentID: queue.tracks[prevIndex].persistentID)
+            setTrack(index: prevIndex)
             play()
             return true
         }
@@ -554,7 +637,7 @@ class Player : NSObject, Observer {
     @discardableResult
     func skipToBeginning() -> Bool {
         if queue.tracks.count > 0 {
-            setTrack(persistentID: queue.tracks[0].persistentID)
+            setTrack(index: 0)
             play()
             return true
         }
@@ -590,26 +673,22 @@ class Player : NSObject, Observer {
         // Find next track in queue
         //print("track finished!")
 
-        for (trackIndex, track) in queue.tracks.enumerated() {
-            if track.persistentID == self.playingTrack?.persistentID {
-                let nextTrackIndex = trackIndex + 1
-                if nextTrackIndex < queue.tracks.count {
-                    let newTrackID = queue.tracks[nextTrackIndex].persistentID
-                    //let time = dispatch_time(dispatch_time_t(DISPATCH_TIME_NOW), Int64(NSEC_PER_SEC / 10))
-                    DispatchQueue.main.async {
-                        let playerInstance = Player.sharedInstance
-                        playerInstance.stop()
-                        playerInstance.setTrack( persistentID: newTrackID )
-                        playerInstance.play()
-                    }
-                    return
+        if let trackIndex = indexNowPlaying {
+            let nextTrackIndex = trackIndex + 1
+            if nextTrackIndex < queue.tracks.count {
+                DispatchQueue.main.async {
+                    let playerInstance = Player.sharedInstance
+                    playerInstance.stop()
+                    playerInstance.setTrack(index: nextTrackIndex)
+                    playerInstance.play()
                 }
+                return
             }
         }
 
         // Queue finished, cue up the first track again.
         if queue.tracks.first != nil {
-            setTrack(persistentID: queue.tracks.first!.persistentID)
+            setTrack(index: 0)
         }
         //print("queue finished!")
     }

@@ -107,6 +107,27 @@ class GenresViewController: UICollectionViewController, UICollectionViewDelegate
         }
     }
 
+    // --- Long-press menu ---
+    override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
+        guard indexPaths.count == 1, let indexPath = indexPaths.first else { return nil }
+        let dataIndex = tableIndexToDataIndex(tableIndex: indexPath.row)
+        guard dataIndex >= 0, dataIndex < genreData.genres.count else { return nil }
+        let genreTitle = Utilities.safeGetString(string: genreData.genres[dataIndex].representativeItem?.genre)
+        let name = Utilities.getGenreDisplayName(genre: genreTitle)
+        // Every song in the genre (worked out when chosen, as it can be a lot)
+        let songs = { MusicLibrary.getGenreItems(genreTitle: genreTitle) }
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+            let add = UIAction(title: "Add to Playlist…", image: UIImage(systemName: "text.badge.plus")) { _ in
+                guard let self = self else { return }
+                let items = songs()
+                PlaylistActions.addToPlaylist(trackIDs: items.map { $0.persistentID },
+                                              summary: PlaylistActions.summary(name: name, count: items.count),
+                                              from: self)
+            }
+            return UIMenu(title: "", children: [add])
+        }
+    }
+
     // --- View ---
     override func viewDidLoad() {
         let bgColourView = UIView()

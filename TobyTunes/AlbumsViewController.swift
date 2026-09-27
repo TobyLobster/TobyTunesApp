@@ -59,9 +59,11 @@ class AlbumsViewController: UICollectionViewController, UICollectionViewDelegate
         guard let collectionView = collectionView else { return CGSize.zero }
         let maxWidth = Utilities.usableWidth(of: collectionView)
         let width    = floor(maxWidth / CGFloat(columns))
-        let padding  = CGFloat(8+thumbnailWidth+10+10)
+        // Margin, artwork and gap on the left; room for the play button on the right. The title is
+        // measured a touch narrower than it really is, so a title that only just fits still gets two lines
+        let padding  = CGFloat(8+thumbnailWidth+5+8+44)
 
-        let titleSize   = Utilities.measureText(text: title, attributes: Utilities.textTitleAttributes(), width: width - padding + 2)
+        let titleSize   = Utilities.measureText(text: title, attributes: Utilities.textTitleAttributes(), width: width - padding - 2)
         let detailsSize = Utilities.measureText(text: details, attributes: Utilities.textDetailsAttributes())
 
         return CGSize(width: width, height: max(CGFloat(thumbnailHeight), ceil(titleSize.height) + ceil(detailsSize.height)) + 16)
@@ -165,6 +167,29 @@ class AlbumsViewController: UICollectionViewController, UICollectionViewDelegate
         }
     }
 
+    // --- Long-press menu ---
+    override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
+        guard indexPaths.count == 1, let indexPath = indexPaths.first else { return nil }
+        let dataIndex = tableIndexToDataIndex(tableIndex: indexPath.row)
+        guard dataIndex >= 0, dataIndex < albumsData.albums.count else { return nil }
+        let albumTitle = albumsData.albums[dataIndex].representativeItem?.albumTitle ?? ""
+        let name = Utilities.getAlbumDisplayName(album: albumTitle)
+        let genre = genreTitle
+        let artist = artistTitle
+        // The album's songs in track order
+        let songs = { MusicLibrary.getSingleAlbumData(genreTitle: genre, artistTitle: artist, albumTitle: albumTitle).items }
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+            let add = UIAction(title: "Add to Playlist…", image: UIImage(systemName: "text.badge.plus")) { _ in
+                guard let self = self else { return }
+                let items = songs()
+                PlaylistActions.addToPlaylist(trackIDs: items.map { $0.persistentID },
+                                              summary: PlaylistActions.summary(name: name, count: items.count),
+                                              from: self)
+            }
+            return UIMenu(title: "", children: [add])
+        }
+    }
+
     // --- View ---
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -172,12 +197,14 @@ class AlbumsViewController: UICollectionViewController, UICollectionViewDelegate
         bgColourView.backgroundColor = UIColor.systemBackground
         self.collectionView?.backgroundView = bgColourView
 
-        // Player observer
-        Player.sharedInstance.subscribe(subscriber: self)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // Player observer, only while on screen: the player holds on to its observers, so a screen that
+        // stayed subscribed would never be freed after going back
+        Player.sharedInstance.unsubscribe(subscriber: self)
+        Player.sharedInstance.subscribe(subscriber: self)
 
         if artistTitle != "" {
             self.navigationItem.title = artistTitle
@@ -207,6 +234,8 @@ class AlbumsViewController: UICollectionViewController, UICollectionViewDelegate
     }
 
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        Player.sharedInstance.unsubscribe(subscriber: self)
         //unregisterForNotifications()
     }
 

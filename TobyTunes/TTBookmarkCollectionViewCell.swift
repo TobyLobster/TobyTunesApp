@@ -20,6 +20,9 @@ class TTBookmarkCollectionViewCell : UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         Utilities.styleThumbnail(bookmarkArt)
+        // Name, details and progress bar centred together on the artwork (so a wrapped name doesn't
+        // crowd the top of the row)
+        Utilities.centreText(title: bookmarkName, details: bookmarkProgress, on: bookmarkArt, in: self)
         Utilities.styleRowButton(bookmarkPlay, systemName: "ellipsis.circle.fill", accessibilityLabel: "Bookmark options")
         bookmarkProgress?.backgroundColor = accentColor
         bookmarkProgress?.layer.cornerRadius = 2

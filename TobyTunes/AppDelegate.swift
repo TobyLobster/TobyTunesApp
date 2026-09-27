@@ -96,6 +96,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return .success
         })
         Bookmarks.load()
+        Bookmarks.removeOrphanedPlaylistBookmarks()
         return true
     }
 

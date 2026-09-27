@@ -232,6 +232,29 @@ struct Utilities {
     }
 
     /// Replaces a row's text button ("Play", "More…") with a filled SF Symbol in the accent colour.
+    /// Centres a row's text (title above details) on its artwork. The storyboard pins the title's bottom
+    /// to the artwork's centre instead, which only looks centred for a one-line title: a title that wraps
+    /// grows upwards, close to the top of the row, leaving extra space under the details.
+    static func centreText(title: UIView?, details: UIView?, on artwork: UIView?, in cell: UICollectionViewCell) {
+        guard let title = title, let details = details, let artwork = artwork else { return }
+        for owner in [cell as UIView, cell.contentView] {
+            for constraint in owner.constraints where
+                (constraint.firstItem === title && constraint.firstAttribute == .bottom &&
+                 constraint.secondItem === artwork && constraint.secondAttribute == .centerY) ||
+                (constraint.firstItem === artwork && constraint.firstAttribute == .centerY &&
+                 constraint.secondItem === title && constraint.secondAttribute == .bottom) {
+                constraint.isActive = false
+            }
+        }
+        let textArea = UILayoutGuide()
+        cell.contentView.addLayoutGuide(textArea)
+        NSLayoutConstraint.activate([
+            textArea.topAnchor.constraint(equalTo: title.topAnchor),
+            textArea.bottomAnchor.constraint(equalTo: details.bottomAnchor),
+            textArea.centerYAnchor.constraint(equalTo: artwork.centerYAnchor),
+        ])
+    }
+
     static func styleRowButton(_ button: UIButton?, systemName: String, accessibilityLabel: String) {
         guard let button = button else { return }
         let config = UIImage.SymbolConfiguration(pointSize: 30, weight: .regular)

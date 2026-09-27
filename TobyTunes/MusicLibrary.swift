@@ -84,14 +84,31 @@ class MusicLibrary {
         return items
     }
 
-    static func getMediaItems(itemIDs: [UInt64] ) -> [MPMediaItem] {
-        var result: [MPMediaItem] = []
+    /// The library's songs by ID, rebuilt when the library changes.
+    static var itemsByID: [UInt64: MPMediaItem] = [:]
+    static var itemsByIDDate: Date = Date(timeIntervalSince1970: 0)
 
+    /// Songs for IDs, in the same order (an ID given twice gives the song twice). IDs of songs that
+    /// aren't in the library are skipped.
+    static func getMediaItems(itemIDs: [UInt64] ) -> [MPMediaItem] {
+        // Look songs up in the cached library (much faster than a query per song for long playlists)
+        let libraryItems = getLibraryItems()
+        if itemsByIDDate != libraryDate || (itemsByID.isEmpty && !libraryItems.isEmpty) {
+            itemsByID = Dictionary(libraryItems.map { ($0.persistentID, $0) }, uniquingKeysWith: { first, _ in first })
+            itemsByIDDate = libraryDate
+        }
+
+        var result: [MPMediaItem] = []
         for itemID in itemIDs {
+            if let item = itemsByID[itemID] {
+                result.append(item)
+                continue
+            }
+            // Not in the cache: ask the library directly, in case the cache is out of date
             let query = MusicLibrary.getGenericQuery(cloudItems: false)
             query.addFilterPredicate( MPMediaPropertyPredicate(value: NSNumber(value: itemID), forProperty: MPMediaItemPropertyPersistentID ) )
-            if query.items != nil && query.items!.count > 0 {
-                result.append(query.items![0])
+            if let item = query.items?.first {
+                result.append(item)
             }
         }
         return result
@@ -378,6 +395,16 @@ class MusicLibrary {
         }
         let collection = MPMediaItemCollection(items: sortedArray)
         return SingleArtistData(items: sortedArray, representativeItem: collection.representativeItem)
+    }
+
+    /// All the songs in a genre, artist by artist and album by album, in track order.
+    static func getGenreItems(genreTitle: String) -> [MPMediaItem] {
+        var items: [MPMediaItem] = []
+        for artist in getArtistsData(genreTitle: genreTitle).artists {
+            let artistTitle = artistForItem(item: artist.representativeItem)
+            items.append(contentsOf: getSingleArtistData(genreTitle: genreTitle, artistTitle: artistTitle).items)
+        }
+        return items
     }
 
     static func resizeArtwork(artwork: MPMediaItemArtwork?, fitWithinSize: CGSize) -> UIImage? {

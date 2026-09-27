@@ -47,6 +47,12 @@ class NowPlayingViewController: UIViewController, Subscriber {
     let backgroundGradient = CAGradientLayer()
     var hasArtworkColours = false
     var glassBackgrounds: [UIView] = []
+    /// The Add to Playlist button at the top right (hidden when nothing is playing).
+    var addToPlaylistButton: UIBarButtonItem? = nil
+    /// Whether the "Nothing Playing" message is showing (nil until first checked).
+    var showingNothingPlaying: Bool? = nil
+    /// Shuffle on/off, on the right of the song titles (the bookmark button is on the left).
+    let shuffleButton = UIButton(type: .custom)
     var cachedItem : MPMediaItem? = nil
     var cachedArtwork : MPMediaItemArtwork? = nil
     var pressingForward = false
@@ -59,6 +65,11 @@ class NowPlayingViewController: UIViewController, Subscriber {
         self.navigationItem.largeTitleDisplayMode = .never
         let backButton = UIBarButtonItem(title: "Back", style: UIBarButtonItem.Style.plain, target:self, action: #selector(back))
         self.navigationItem.leftBarButtonItem = backButton
+        // About at the far right, as on the other tabs, with Add to Playlist beside it
+        let aboutButton = UIBarButtonItem(image: UIImage(systemName: "info.circle"), style: .plain, target: self, action: #selector(showAbout))
+        aboutButton.accessibilityLabel = "About"
+        addToPlaylistButton = makeAddToPlaylistButton()
+        self.navigationItem.rightBarButtonItems = [aboutButton, addToPlaylistButton!]
 
         // Volume view
         volumeViewParent?.backgroundColor = UIColor.clear
@@ -73,6 +84,8 @@ class NowPlayingViewController: UIViewController, Subscriber {
 
         // The play/pause overlay on the artwork is no longer used
         self.artworkButtonImage?.isHidden = true
+
+        setUpShuffleButton()
 
         // Player observer
         Player.sharedInstance.subscribe(subscriber: self)
@@ -92,6 +105,165 @@ class NowPlayingViewController: UIViewController, Subscriber {
         titleHeightConstraint?.constant = ceil(titleFont.lineHeight) + 2 * ceil(detailFont.lineHeight) + 6
     }
 
+    /// "Add to Playlist" button at the top right: adds the playing song, or its whole album.
+    func makeAddToPlaylistButton() -> UIBarButtonItem {
+        // Worked out each time it's opened, as the playing song changes
+        let menu = UIMenu(title: "", children: [UIDeferredMenuElement.uncached { [weak self] completion in
+            completion(self?.addToPlaylistMenuItems() ?? [])
+        }])
+        let button = UIBarButtonItem(title: nil, image: UIImage(systemName: "text.badge.plus"), primaryAction: nil, menu: menu)
+        button.accessibilityLabel = "Add to Playlist"
+        return button
+    }
+
+    func addToPlaylistMenuItems() -> [UIMenuElement] {
+        guard let trackID = Player.sharedInstance.nowPlayingID,
+              let item = MusicLibrary.getMediaItems(itemIDs: [trackID]).first else {
+            return [UIAction(title: "Nothing Playing", attributes: .disabled) { _ in }]
+        }
+        let songName = Utilities.getTrackDisplayName(track: item.title)
+        let song = UIAction(title: "Add Song to Playlist…", image: UIImage(systemName: "music.note")) { [weak self] _ in
+            guard let self = self else { return }
+            PlaylistActions.addToPlaylist(trackIDs: [trackID],
+                                          summary: PlaylistActions.summary(name: songName, count: 1),
+                                          from: self)
+        }
+        let albumItems = MusicLibrary.getSingleAlbumData(albumID: item.albumPersistentID).items
+        let albumName = Utilities.getAlbumDisplayName(album: item.albumTitle)
+        let album = UIAction(title: "Add Album to Playlist…", image: UIImage(systemName: "square.stack")) { [weak self] _ in
+            guard let self = self else { return }
+            PlaylistActions.addToPlaylist(trackIDs: albumItems.map { $0.persistentID },
+                                          summary: PlaylistActions.summary(name: albumName, count: albumItems.count),
+                                          from: self)
+        }
+        return [song, album]
+    }
+
+    /// With nothing loaded, the player controls are hidden and a message shows instead (like the one on
+    /// Playlists when there are none), with buttons to go and choose something.
+    func updateNothingPlayingState() {
+        let nothingPlaying = Player.sharedInstance.nowPlayingID == nil
+        if nothingPlaying {
+            if showingNothingPlaying != true {
+                for subview in view.subviews {
+                    subview.alpha = 0
+                }
+            }
+            // Set every time, as whether there are bookmarks can change
+            contentUnavailableConfiguration = nothingPlayingConfiguration()
+        }
+        else if showingNothingPlaying != false {
+            contentUnavailableConfiguration = nil
+            for subview in view.subviews {
+                subview.alpha = 1
+            }
+        }
+        addToPlaylistButton?.isHidden = nothingPlaying
+        showingNothingPlaying = nothingPlaying
+    }
+
+    func nothingPlayingConfiguration() -> UIContentUnavailableConfiguration {
+        let hasBookmarks = Bookmarks.count() > 0
+        var configuration = UIContentUnavailableConfiguration.empty()
+        configuration.image = UIImage(systemName: "music.note")
+        configuration.imageProperties.tintColor = NowPlayingViewController.secondaryText
+        configuration.text = "Nothing Playing"
+        configuration.textProperties.color = .white
+        configuration.secondaryText = hasBookmarks
+            ? "Choose an album, artist or playlist to start listening, or carry on from a bookmark."
+            : "Choose an album, artist or playlist to start listening."
+        configuration.secondaryTextProperties.color = NowPlayingViewController.secondaryText
+
+        // The deeper light-mode red, as for the bookmark and shuffle buttons on this dark screen
+        var browse = UIButton.Configuration.filled()
+        browse.title = "Browse Artists"
+        browse.baseBackgroundColor = accentColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
+        browse.baseForegroundColor = .white
+        browse.cornerStyle = .capsule
+        configuration.button = browse
+        configuration.buttonProperties.primaryAction = UIAction { [weak self] _ in
+            self?.showTab(titled: "Artists")
+        }
+
+        if hasBookmarks {
+            var bookmarks = UIButton.Configuration.plain()
+            bookmarks.title = "Open Bookmarks"
+            bookmarks.baseForegroundColor = .white
+            configuration.secondaryButton = bookmarks
+            configuration.secondaryButtonProperties.primaryAction = UIAction { [weak self] _ in
+                self?.showTab(titled: "Bookmarks")
+            }
+        }
+        return configuration
+    }
+
+    /// Opens About as a sheet (it follows the phone's light/dark setting, not this dark screen).
+    @objc func showAbout() {
+        (tabBarController as? TTTabBarController)?.showAbout()
+    }
+
+    func showTab(titled title: String) {
+        guard let tabBarController = tabBarController,
+              let index = tabBarController.viewControllers?.firstIndex(where: { $0.tabBarItem.title == title }) else { return }
+        tabBarController.selectedIndex = index
+    }
+
+    /// Adds the shuffle button to the song titles area, mirroring the bookmark button on the other side.
+    func setUpShuffleButton() {
+        guard let titlesView = bookmarkButton?.superview, let bookmarkButton = bookmarkButton else { return }
+        let side: CGFloat = 50
+        shuffleButton.frame = CGRect(x: 0, y: 0, width: side, height: side)
+        shuffleButton.translatesAutoresizingMaskIntoConstraints = false
+        titlesView.addSubview(shuffleButton)
+        NSLayoutConstraint.activate([
+            shuffleButton.trailingAnchor.constraint(equalTo: titlesView.trailingAnchor),
+            shuffleButton.centerYAnchor.constraint(equalTo: bookmarkButton.centerYAnchor),
+            shuffleButton.widthAnchor.constraint(equalToConstant: side),
+            shuffleButton.heightAnchor.constraint(equalToConstant: side),
+        ])
+
+        // White when off; the accent colour when on (the deeper light-mode red, as for a bookmark)
+        let onColour = accentColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
+        let offImage = NowPlayingViewController.symbol("shuffle", size: 21)
+        let onImage = NowPlayingViewController.symbol("shuffle", size: 21, weight: .bold, colour: onColour)
+        shuffleButton.setImage(offImage, for: .normal)
+        shuffleButton.setImage(onImage, for: .selected)
+        shuffleButton.setImage(onImage, for: [.selected, .highlighted])
+        shuffleButton.accessibilityLabel = "Shuffle"
+        shuffleButton.addTarget(self, action: #selector(toggleShuffle), for: .touchUpInside)
+        addGlassBackground(to: shuffleButton)
+        updateShuffleButton()
+    }
+
+    func updateShuffleButton() {
+        shuffleButton.isSelected = Player.sharedInstance.isShuffled
+        shuffleButton.accessibilityValue = Player.sharedInstance.isShuffled ? "On" : "Off"
+    }
+
+    /// Shuffle on: the playing song carries on and the rest of the list follows in a random order.
+    /// Shuffle off: back to the list's normal order, carrying on from the playing song.
+    @objc func toggleShuffle() {
+        let turningOn = !Player.sharedInstance.isShuffled
+        let sheet = UIAlertController(
+            title: turningOn ? "Shuffle?" : "Turn Off Shuffle?",
+            message: turningOn ? "This song carries on, then the rest play in a random order."
+                               : "Carries on from this song in the normal order.",
+            preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: turningOn ? "Shuffle" : "Turn Off Shuffle", style: .default) { [weak self] _ in
+            Player.sharedInstance.setShuffle(turningOn)
+            self?.updateShuffleButton()
+            // A bookmark for this list remembers the new order straight away
+            Bookmarks.updateBookmarks()
+        })
+        sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        // iPad shows it as a popover from the button
+        if let popover = sheet.popoverPresentationController {
+            popover.sourceView = shuffleButton
+            popover.sourceRect = shuffleButton.bounds
+        }
+        present(sheet, animated: true, completion: nil)
+    }
+
     @objc func back() {
         self.navigationController?.popViewController(animated: true)
         self.tabBarController?.selectedIndex = fromTabIndex
@@ -99,6 +271,7 @@ class NowPlayingViewController: UIViewController, Subscriber {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        updateNothingPlayingState()
 
         changedTextSize()
 
@@ -120,13 +293,13 @@ class NowPlayingViewController: UIViewController, Subscriber {
         pressingForward = false
         pressingBackward = false
 
-        var selected = false
-        if let currentTrackID: UInt64 = Player.sharedInstance.nowPlayingID {
-            if Bookmarks.containsTrack(trackID: currentTrackID) {
-                selected = true
-            }
-        }
-        bookmarkButton?.isSelected = selected
+        // Bookmarked when the list being played has a bookmark
+        bookmarkButton?.isSelected = Player.sharedInstance.nowPlayingID != nil && Bookmarks.currentBookmarkId != nil
+        // Dimmed and unavailable when the playlist being played has been deleted
+        let canBookmark = Bookmarks.canBookmarkCurrentPlaylist
+        bookmarkButton?.isEnabled = canBookmark
+        bookmarkButton?.alpha = canBookmark ? 1.0 : 0.35
+        updateShuffleButton()
 
         // change the back button to cancel and add an event handler
         // self.navigationController?.delegate
@@ -212,6 +385,7 @@ class NowPlayingViewController: UIViewController, Subscriber {
     }
 
     func updateCurrentTrackUI() {
+        updateNothingPlayingState()
         if let currentItemID = Player.sharedInstance.nowPlayingID {
             if cachedItem == nil || currentItemID != cachedItem!.persistentID {
                 if let currentItem = MusicLibrary.getMediaItems(itemIDs: [currentItemID]).first {
@@ -329,6 +503,7 @@ class NowPlayingViewController: UIViewController, Subscriber {
                 if time == nil {
                     albumLabel?.text = "Stopped"
                     bookmarkButton?.isHidden = true
+                    shuffleButton.isHidden = true
                     timeElapsedLabel?.text = ""
                     timeRemainingLabel?.text = ""
                     progressSlider.value = 0.0
@@ -337,6 +512,9 @@ class NowPlayingViewController: UIViewController, Subscriber {
                 currentProgress = time!
                 if bookmarkButton != nil && bookmarkButton!.isHidden {
                     bookmarkButton?.isHidden = false
+                }
+                if shuffleButton.isHidden {
+                    shuffleButton.isHidden = false
                 }
             }
 
@@ -368,7 +546,7 @@ class NowPlayingViewController: UIViewController, Subscriber {
     }
 
     func previousSongInternal() {
-        if Player.sharedInstance.indexNowPlaying! > 0 {
+        if (Player.sharedInstance.indexNowPlaying ?? 0) > 0 {
             Player.sharedInstance.skipToPreviousItem()
         }
         else {
@@ -512,11 +690,16 @@ class NowPlayingViewController: UIViewController, Subscriber {
     }
 
     @IBAction func bookmark(sender: UIButton) {
+        // Nothing to bookmark when the playlist being played has been deleted
+        guard sender.isSelected || Bookmarks.canBookmarkCurrentPlaylist else { return }
         if sender.isSelected {
-            if let currentTrackID: UInt64 = Player.sharedInstance.nowPlayingID {
-                if let bookmarkId = Bookmarks.findBookmarkIdWithTrackID(persistentId: currentTrackID) {
-                    Bookmarks.removeBookmark(bookmarkId: bookmarkId)
-                }
+            // Remove the bookmark for the list being played
+            if let bookmarkId = Bookmarks.currentBookmarkId {
+                Bookmarks.removeBookmark(bookmarkId: bookmarkId)
+            }
+            else if let currentTrackID: UInt64 = Player.sharedInstance.nowPlayingID,
+                    let bookmarkId = Bookmarks.findBookmarkIdWithTrackID(persistentId: currentTrackID) {
+                Bookmarks.removeBookmark(bookmarkId: bookmarkId)
             }
             sender.isSelected = false
         }
@@ -526,13 +709,7 @@ class NowPlayingViewController: UIViewController, Subscriber {
                     // Is this track in the current playlist - if so, add a bookmark with the current playlist
                     if Bookmarks.isTrackIDInCurrentPlaylist(mediaItemID: currentTrackID) {
                         Bookmarks.addCurrentPlaylistAsBookmark()
-                        sender.isSelected = true
-                        return
-                    }
-
-                    // Is this track already bookmarked? If so, all is OK, just show the button marked
-                    if Bookmarks.containsTrack(trackID: currentTrackID) {
-                        sender.isSelected = true
+                        sender.isSelected = Bookmarks.currentBookmarkId != nil
                         return
                     }
 
@@ -559,9 +736,13 @@ class NowPlayingViewController: UIViewController, Subscriber {
     }
 
     // Subscriber pattern:
-    var properties = ["updateTrack", "updateProgress", "readyToPlay", "failed"]
+    var properties = ["updateTrack", "updateProgress", "readyToPlay", "failed", "updateShuffle"]
 
     func notify(propertyValue: String, newValue: Double, options: [String:String]?) {
+        if propertyValue == "updateShuffle" {
+            updateShuffleButton()
+            return
+        }
         updateCurrentTrackUI()
         updateProgressUI(dragging: dragging)
         updatePlaybackStateUI()
@@ -656,6 +837,9 @@ extension NowPlayingViewController {
         navigationItem.standardAppearance = appearance
         navigationItem.scrollEdgeAppearance = appearance
         navigationItem.leftBarButtonItem?.tintColor = .white
+        for item in navigationItem.rightBarButtonItems ?? [] {
+            item.tintColor = .white
+        }
     }
 
     /// Bookmark icon for "bookmarked": a filled bookmark in the accent colour with a white tick on it.

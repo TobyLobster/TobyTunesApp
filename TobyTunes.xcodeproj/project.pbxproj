@@ -21,11 +21,16 @@
 		FF2250261D342CAD002D0066 /* TTCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2250251D342CAD002D0066 /* TTCollectionViewFlowLayout.swift */; };
 		FF2250281D379558002D0066 /* MusicLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2250271D379558002D0066 /* MusicLibrary.swift */; };
 		FF22502A1D38E35C002D0066 /* Bookmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2250291D38E35C002D0066 /* Bookmarks.swift */; };
+		AA00000000000000000000E2 /* UserPlaylists.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000000000000000000E1 /* UserPlaylists.swift */; };
 		FF22502C1D38EA40002D0066 /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF22502B1D38EA40002D0066 /* BookmarksViewController.swift */; };
+		AA00000000000000000000F2 /* PlaylistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000000000000000000F1 /* PlaylistsViewController.swift */; };
+		AA00000000000000000001A2 /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000000000000000001A1 /* PlaylistViewController.swift */; };
+		AA00000000000000000001B2 /* AddToPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000000000000000001B1 /* AddToPlaylistViewController.swift */; };
 		FF22502E1D394BD7002D0066 /* TTBookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF22502D1D394BD7002D0066 /* TTBookmarkCollectionViewCell.swift */; };
 		FF51F5AD1D21BD0400637E58 /* TTAlbumsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF51F5AC1D21BD0400637E58 /* TTAlbumsCollectionViewCell.swift */; };
 		FF51F5AF1D226AC300637E58 /* TTTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF51F5AE1D226AC300637E58 /* TTTabBarController.swift */; };
 		FF6D00071D1AE2FE004CB9F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF6D00061D1AE2FE004CB9F5 /* Assets.xcassets */; };
+		AA00000000000000000001C2 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA00000000000000000001C1 /* PrivacyInfo.xcprivacy */; };
 		FF7434E61D547080005AD50B /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7434E51D547080005AD50B /* Player.swift */; };
 		FF7434E81D569BE2005AD50B /* ObserverPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7434E71D569BE2005AD50B /* ObserverPattern.swift */; };
 		FF87CA351D1AE3D3001A5945 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF87CA281D1AE3D3001A5945 /* AboutViewController.swift */; };
@@ -54,12 +59,17 @@
 		FF2250251D342CAD002D0066 /* TTCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		FF2250271D379558002D0066 /* MusicLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicLibrary.swift; sourceTree = "<group>"; };
 		FF2250291D38E35C002D0066 /* Bookmarks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bookmarks.swift; sourceTree = "<group>"; };
+		AA00000000000000000000E1 /* UserPlaylists.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPlaylists.swift; sourceTree = "<group>"; };
 		FF22502B1D38EA40002D0066 /* BookmarksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
+		AA00000000000000000000F1 /* PlaylistsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsViewController.swift; sourceTree = "<group>"; };
+		AA00000000000000000001A1 /* PlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
+		AA00000000000000000001B1 /* AddToPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToPlaylistViewController.swift; sourceTree = "<group>"; };
 		FF22502D1D394BD7002D0066 /* TTBookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTBookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
 		FF51F5AC1D21BD0400637E58 /* TTAlbumsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTAlbumsCollectionViewCell.swift; sourceTree = "<group>"; };
 		FF51F5AE1D226AC300637E58 /* TTTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTTabBarController.swift; sourceTree = "<group>"; };
 		FF6D00061D1AE2FE004CB9F5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FF6D000B1D1AE2FE004CB9F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA00000000000000000001C1 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		FF6DFFFA1D1AE2FE004CB9F5 /* TobyTunes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TobyTunes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF7434E51D547080005AD50B /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		FF7434E71D569BE2005AD50B /* ObserverPattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObserverPattern.swift; sourceTree = "<group>"; };
@@ -118,11 +128,13 @@
 				FFFDA1891D5B54590080D3B4 /* Helpers */,
 				FFFDA1881D5B54470080D3B4 /* ViewControllers */,
 				FF2250291D38E35C002D0066 /* Bookmarks.swift */,
+				AA00000000000000000000E1 /* UserPlaylists.swift */,
 				FF87CA2C1D1AE3D3001A5945 /* AppDelegate.swift */,
 				AA00000000000000000000B1 /* SceneDelegate.swift */,
 				FF22501E1D33789B002D0066 /* Main.storyboard */,
 				FF6D00061D1AE2FE004CB9F5 /* Assets.xcassets */,
 				FF6D000B1D1AE2FE004CB9F5 /* Info.plist */,
+				AA00000000000000000001C1 /* PrivacyInfo.xcprivacy */,
 			);
 			path = TobyTunes;
 			sourceTree = "<group>";
@@ -136,6 +148,9 @@
 				FF87CA291D1AE3D3001A5945 /* AlbumsViewController.swift */,
 				FF87CA2A1D1AE3D3001A5945 /* AlbumViewController.swift */,
 				FF22502B1D38EA40002D0066 /* BookmarksViewController.swift */,
+				AA00000000000000000000F1 /* PlaylistsViewController.swift */,
+				AA00000000000000000001A1 /* PlaylistViewController.swift */,
+				AA00000000000000000001B1 /* AddToPlaylistViewController.swift */,
 				FF87CA281D1AE3D3001A5945 /* AboutViewController.swift */,
 				FF87CA311D1AE3D3001A5945 /* NowPlayingViewController.swift */,
 				FF22501A1D329D0D002D0066 /* NowPlayingNavigationController.swift */,
@@ -255,6 +270,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FF6D00071D1AE2FE004CB9F5 /* Assets.xcassets in Resources */,
+				AA00000000000000000001C2 /* PrivacyInfo.xcprivacy in Resources */,
 				FF2250201D33789B002D0066 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -283,6 +299,7 @@
 				FF87CA361D1AE3D3001A5945 /* AlbumsViewController.swift in Sources */,
 				FF87CA3E1D1AE3D3001A5945 /* NowPlayingViewController.swift in Sources */,
 				FF22502A1D38E35C002D0066 /* Bookmarks.swift in Sources */,
+				AA00000000000000000000E2 /* UserPlaylists.swift in Sources */,
 				FF2250171D2FBBC1002D0066 /* TTTrackCollectionViewCell.swift in Sources */,
 				FF87CA401D1AE3D3001A5945 /* UIImage+Margins.swift in Sources */,
 				FF2250191D311AC5002D0066 /* TTSegue.swift in Sources */,
@@ -291,6 +308,9 @@
 				FF87CA381D1AE3D3001A5945 /* ALVolumeView.swift in Sources */,
 				FF87CA3B1D1AE3D3001A5945 /* Constants.swift in Sources */,
 				FF22502C1D38EA40002D0066 /* BookmarksViewController.swift in Sources */,
+				AA00000000000000000000F2 /* PlaylistsViewController.swift in Sources */,
+				AA00000000000000000001A2 /* PlaylistViewController.swift in Sources */,
+				AA00000000000000000001B2 /* AddToPlaylistViewController.swift in Sources */,
 				FF7434E61D547080005AD50B /* Player.swift in Sources */,
 				AA00000000000000000000C2 /* AudioFilterTap.swift in Sources */,
 				FF22501B1D329D0D002D0066 /* NowPlayingNavigationController.swift in Sources */,

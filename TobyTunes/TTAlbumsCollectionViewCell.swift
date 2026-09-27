@@ -17,6 +17,7 @@ class TTAlbumsCollectionViewCell : UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         Utilities.styleThumbnail(albumArt)
+        Utilities.centreText(title: albumName, details: albumDetails, on: albumArt, in: self)
         Utilities.styleRowButton(albumPlay, systemName: "play.circle.fill", accessibilityLabel: "Play album")
     }
 }
