@@ -23,32 +23,6 @@ extension UIImage {
         }
     }
 
-    func oldImageWithGaussianBlur() -> UIImage {
-        let weight = [0.2270270270, 0.1945945946, 0.1216216216, 0.0540540541, 0.0162162162]
-
-        // Blur horizontally
-        UIGraphicsBeginImageContext(self.size)
-        self.draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height), blendMode:CGBlendMode.plusLighter, alpha:CGFloat(weight[0]) )
-        for x in 1..<5 {
-            self.draw( in: CGRect(x: CGFloat(x), y: 0, width: self.size.width, height: self.size.height), blendMode:CGBlendMode.plusLighter, alpha:CGFloat(weight[x]) )
-            self.draw( in: CGRect(x: CGFloat(-x), y: 0, width: self.size.width, height: self.size.height), blendMode:CGBlendMode.plusLighter, alpha:CGFloat(weight[x]) )
-        }
-        let horizBlurredImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-
-        // Blur vertically
-        UIGraphicsBeginImageContext(self.size)
-        horizBlurredImage?.draw( in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height), blendMode:CGBlendMode.plusLighter, alpha:CGFloat(weight[0]) )
-        for y in 1..<5 {
-            horizBlurredImage?.draw( in: CGRect(x: 0, y: CGFloat(y), width: self.size.width, height: self.size.height), blendMode:CGBlendMode.plusLighter, alpha:CGFloat(weight[y]) )
-            horizBlurredImage?.draw( in: CGRect(x: 0, y: CGFloat(-y), width: self.size.width, height: self.size.height), blendMode:CGBlendMode.plusLighter, alpha:CGFloat(weight[y]) )
-        }
-        let blurredImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-
-        return blurredImage!
-    }
-
     func imageWithImage(image:UIImage, scaledToSize newSize:CGSize) -> UIImage {
         let renderer = UIGraphicsImageRenderer(size: newSize)
         let image = renderer.image { _ in

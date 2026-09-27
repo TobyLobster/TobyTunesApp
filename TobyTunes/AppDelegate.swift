@@ -9,7 +9,7 @@
 import UIKit
 import MediaPlayer
 
-@UIApplicationMain
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // Set by SceneDelegate as the app moves between foreground and background

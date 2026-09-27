@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol Observer: class{
+protocol Observer: AnyObject {
     var subscribers: [Subscriber] {get set}
 
     func propertyChanged(propertyName: String, newValue: Double, options: [String:String]?)
@@ -18,7 +18,7 @@ protocol Observer: class{
     func unsubscribe(subscriber: Subscriber)
 }
 
-protocol Subscriber: class{
+protocol Subscriber: AnyObject {
     var properties : [String] {get set}
     func notify(propertyValue: String, newValue: Double, options: [String:String]?)
 }
