@@ -278,6 +278,8 @@ struct Bookmarks {
 
         // If this list is bookmarked, its bookmark follows playback from now on
         currentBookmarkId = playerIsPlaying(result) ? findBookmark(matching: result)?.id : nil
+        // And it goes to the top of History
+        recordInHistory()
     }
 
     /// Whether the player's queue is this list (in any order).
@@ -342,8 +344,20 @@ struct Bookmarks {
     /// Starts playing a bookmark from where it was left. Returns false if none of its songs can be played.
     @discardableResult
     static func resumeBookmark(bookmarkId: Int) -> Bool {
-        guard let markIndex = findMarkIndexWithId(bookmarkId: bookmarkId) else { return false }
-        var mark = data.marks[markIndex]
+        guard let markIndex = findMarkIndexWithId(bookmarkId: bookmarkId),
+              let mark = startPlaying(data.marks[markIndex]) else { return false }
+        data.marks[markIndex] = mark
+        save()
+        currentBookmarkId = mark.id
+        recordInHistory()
+        return true
+    }
+
+    /// Plays a saved place (a bookmark or a History entry) from where it was left, after bringing it up
+    /// to date: a playlist may have been edited, and songs may have left the library. Returns the
+    /// updated place, or nil if none of its songs can be played.
+    static func startPlaying(_ original: Bookmark) -> Bookmark? {
+        var mark = original
 
         // A playlist may have been edited since it was bookmarked
         if mark.playlist.type == .UserPlaylist,
@@ -371,7 +385,7 @@ struct Bookmarks {
                 kept.append(itemID)
             }
         }
-        guard !kept.isEmpty else { return false }
+        guard !kept.isEmpty else { return nil }
         if !placed || itemIndex >= kept.count {
             itemIndex = 0
             trackTime = 0.0
@@ -383,8 +397,6 @@ struct Bookmarks {
         }
         mark.currentItemIndex = itemIndex
         mark.currentTrackTime = trackTime
-        data.marks[markIndex] = mark
-        save()
 
         let player = Player.sharedInstance
         player.pause()
@@ -399,8 +411,7 @@ struct Bookmarks {
         player.play()
 
         data.currentPlaylist = mark.playlist
-        currentBookmarkId = mark.id
-        return true
+        return mark
     }
 
     /// Brings a playlist's bookmark up to date after the playlist has been edited: songs since removed
@@ -506,6 +517,15 @@ struct Bookmarks {
         if data.currentPlaylist.type == .UserPlaylist && data.currentPlaylist.userPlaylistID == key {
             data.currentPlaylist = Playlist()
         }
+        // And its History entry
+        let removedEntries = history.filter { isBookmark($0, forUserPlaylistID: key) }.map { $0.id }
+        if !removedEntries.isEmpty {
+            history.removeAll { isBookmark($0, forUserPlaylistID: key) }
+            if let current = currentHistoryId, removedEntries.contains(current) {
+                currentHistoryId = nil
+            }
+            saveHistory()
+        }
     }
 
     /// Whether what's playing can be bookmarked: not when it came from a playlist that's since been deleted.
@@ -522,6 +542,11 @@ struct Bookmarks {
         if data.marks.count != before {
             save()
         }
+        let historyBefore = history.count
+        history.removeAll { $0.playlist.type == .UserPlaylist && !existing.contains($0.playlist.userPlaylistID) }
+        if history.count != historyBefore {
+            saveHistory()
+        }
     }
 
     /// Keeps bookmark titles in step when a playlist is renamed.
@@ -537,6 +562,14 @@ struct Bookmarks {
         }
         if updated {
             save()
+        }
+        var historyUpdated = false
+        for index in history.indices where isBookmark(history[index], forUserPlaylistID: key) {
+            history[index].playlist.title = name
+            historyUpdated = true
+        }
+        if historyUpdated {
+            saveHistory()
         }
     }
 
@@ -605,17 +638,28 @@ struct Bookmarks {
         return findBookmark(matching: playlist) != nil
     }
 
-    /// Saves the playing position into the bookmark for the list that's playing (if it has one).
+    /// Saves the playing position into the bookmark and the History entry for the list that's playing.
     static func updateBookmarks() {
-        guard let bookmarkId = currentBookmarkId,
-              let markIndex = findMarkIndexWithId(bookmarkId: bookmarkId) else { return }
+        if let bookmarkId = currentBookmarkId, let markIndex = findMarkIndexWithId(bookmarkId: bookmarkId) {
+            if follow(&data.marks[markIndex]) {
+                save()
+            }
+        }
+        if let entryId = currentHistoryId, let entryIndex = history.firstIndex(where: { $0.id == entryId }) {
+            if follow(&history[entryIndex]) {
+                saveHistorySoon()
+            }
+        }
+    }
+
+    /// Brings a saved place up to the player's position and order. Returns true if anything changed.
+    private static func follow(_ mark: inout Bookmark) -> Bool {
         let player = Player.sharedInstance
         guard player.nowPlayingID != nil,
               let currentTrackTime = player.getCurrentTime(),
               let currentItemIndex = player.indexNowPlaying,
-              let currentTrackDuration = player.getCurrentDuration() else { return }
+              let currentTrackDuration = player.getCurrentDuration() else { return false }
 
-        var mark = data.marks[markIndex]
         var updated = false
         if ((mark.currentItemIndex != currentItemIndex) ||
             (mark.currentTrackTime != currentTrackTime) ||
@@ -626,7 +670,7 @@ struct Bookmarks {
             updated = true
         }
 
-        // Keep the bookmark's order in step with the player's, e.g. after shuffle is turned on or off
+        // Keep the order in step with the player's, e.g. after shuffle is turned on or off
         if mark.playlist.isShuffled != player.isShuffled ||
             !mark.playlist.mediaItemIDs.elementsEqual(player.queue.tracks.lazy.map { $0.persistentID }) {
             mark.playlist.mediaItemIDs = player.queueItemIDs
@@ -634,11 +678,7 @@ struct Bookmarks {
             mark.playlist.unshuffledItemIDs = player.isShuffled ? player.unshuffledItemIDs : []
             updated = true
         }
-
-        if updated {
-            data.marks[markIndex] = mark
-            save()
-        }
+        return updated
     }
 
     static var bookmarksURL: URL? = nil
@@ -677,6 +717,7 @@ struct Bookmarks {
     }
 
     static func load() {
+        loadHistory()
         // Load from storage
         data.marks.removeAll()
         if let bookmarksURL = bookmarkStorageFilename() {
@@ -686,6 +727,161 @@ struct Bookmarks {
             } catch let error as NSError {
                 print(error.description)
             }
+        }
+    }
+}
+
+// MARK: - History
+
+/// History: the last few albums, artists and playlists played, newest first, each remembering its
+/// place like a bookmark (they're the same thing behind the scenes). When more are played, the oldest
+/// drop off the end. Saved in its own file, beside the bookmarks.
+extension Bookmarks {
+    static let historyLimit = 20
+
+    static var history: [Bookmark] = []
+
+    /// The History entry for what's playing; it follows playback like a bookmark does.
+    static var currentHistoryId: Int? = nil
+
+    /// When History was last saved (it's saved at most every few seconds while playing).
+    private static var historySavedAt = Date.distantPast
+    private static var historyNeedsSaving = false
+
+    /// Puts what's just started playing at the top of History (moving it there if it's already in
+    /// History), and makes that entry follow playback.
+    static func recordInHistory() {
+        let playlist = data.currentPlaylist
+        let player = Player.sharedInstance
+        guard playlist.type != .None, playerIsPlaying(playlist),
+              player.nowPlayingID != nil, let itemIndex = player.indexNowPlaying else { return }
+
+        // The order being played (which may be shuffled), and the place in it
+        var list = playlist
+        list.mediaItemIDs = player.queueItemIDs
+        list.isShuffled = player.isShuffled
+        list.unshuffledItemIDs = player.isShuffled ? player.unshuffledItemIDs : []
+        var entry = Bookmark(playlist: list,
+                             currentItemIndex: itemIndex,
+                             currentTrackTime: player.getCurrentTime() ?? 0,
+                             currentTrackDuration: player.getCurrentDuration() ?? 0)
+
+        if let existing = history.firstIndex(where: { $0.playlist.isSameSource(as: playlist) }) {
+            entry.id = history[existing].id
+            history.remove(at: existing)
+        }
+        history.insert(entry, at: 0)
+        if history.count > historyLimit {
+            history.removeLast(history.count - historyLimit)
+        }
+        currentHistoryId = entry.id
+        saveHistory()
+    }
+
+    static func findHistoryEntry(id: Int) -> Bookmark? {
+        return history.first { $0.id == id }
+    }
+
+    /// Plays a History entry from where it was left (or from the start). Returns false if none of its
+    /// songs can be played.
+    @discardableResult
+    static func resumeHistoryEntry(id: Int, fromStart: Bool = false) -> Bool {
+        guard let index = history.firstIndex(where: { $0.id == id }) else { return false }
+        var original = history[index]
+        if fromStart {
+            original.currentItemIndex = 0
+            original.currentTrackTime = 0
+        }
+        guard let entry = startPlaying(original) else { return false }
+        history[index] = entry
+        // A bookmark for the same list follows playback too
+        currentBookmarkId = playerIsPlaying(entry.playlist) ? findBookmark(matching: entry.playlist)?.id : nil
+        recordInHistory()
+        return true
+    }
+
+    static func removeHistoryEntry(id: Int) {
+        history.removeAll { $0.id == id }
+        if currentHistoryId == id {
+            currentHistoryId = nil
+        }
+        saveHistory()
+    }
+
+    static func clearHistory() {
+        history.removeAll()
+        currentHistoryId = nil
+        saveHistory()
+    }
+
+    /// Whether a History entry's list is also bookmarked.
+    static func isBookmarked(historyEntryId id: Int) -> Bool {
+        guard let entry = findHistoryEntry(id: id) else { return false }
+        return findBookmark(matching: entry.playlist) != nil
+    }
+
+    /// Keeps a History entry as a bookmark too (at its current place). Returns false if it was
+    /// already bookmarked.
+    @discardableResult
+    static func bookmarkHistoryEntry(id: Int) -> Bool {
+        guard let entry = findHistoryEntry(id: id), findBookmark(matching: entry.playlist) == nil else { return false }
+        let bookmark = Bookmark(playlist: entry.playlist,
+                                currentItemIndex: entry.currentItemIndex,
+                                currentTrackTime: entry.currentTrackTime,
+                                currentTrackDuration: entry.currentTrackDuration)
+        addBookmark(newBookmark: bookmark)
+        // If it's what's playing, the new bookmark follows playback from now on
+        if currentHistoryId == id && playerIsPlaying(entry.playlist) {
+            currentBookmarkId = bookmark.id
+        }
+        return true
+    }
+
+    // MARK: Storage
+
+    private static var historyURL: URL? {
+        return Utilities.applicationDataDirectory()?.appendingPathComponent("history.dat", isDirectory: false)
+    }
+
+    static func saveHistory() {
+        historySavedAt = Date()
+        historyNeedsSaving = false
+        guard let url = historyURL else { return }
+        let dictionary = NSMutableDictionary()
+        dictionary["version"] = NSNumber(value: 1)
+        dictionary["marks"] = history.map { $0.encode() }
+        do {
+            try ArchiveHelper.archive(dictionary).write(to: url, options: .atomicWrite)
+        } catch {
+            print("Failed to save history: \(error)")
+        }
+    }
+
+    /// Saves History, but no more than every few seconds (the playing entry changes constantly).
+    static func saveHistorySoon() {
+        historyNeedsSaving = true
+        if Date().timeIntervalSince(historySavedAt) > 5 {
+            saveHistory()
+        }
+    }
+
+    /// Saves anything not yet saved (when the app goes into the background).
+    static func saveHistoryIfNeeded() {
+        if historyNeedsSaving {
+            saveHistory()
+        }
+    }
+
+    static func loadHistory() {
+        history.removeAll()
+        guard let url = historyURL, FileManager.default.fileExists(atPath: url.path) else { return }
+        do {
+            let dictionary = ArchiveHelper.unarchiveDictionary(try Data(contentsOf: url))
+            if let marks = dictionary["marks"] as? [Data] {
+                history = marks.map { Bookmark(data: $0) }
+            }
+        } catch {
+            print("Failed to load history: \(error)")
         }
     }
 }

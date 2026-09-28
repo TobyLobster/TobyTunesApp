@@ -157,41 +157,80 @@ class NowPlayingViewController: UIViewController, Subscriber {
             for subview in view.subviews {
                 subview.alpha = 1
             }
+            // Something has just started (e.g. Continue): its bookmark state may be new
+            updateBookmarkButton()
         }
         addToPlaylistButton?.isHidden = nothingPlaying
         showingNothingPlaying = nothingPlaying
     }
 
+    /// Bookmarked when the list being played has a bookmark; dimmed and unavailable when the playlist
+    /// being played has been deleted.
+    func updateBookmarkButton() {
+        bookmarkButton?.isSelected = Player.sharedInstance.nowPlayingID != nil && Bookmarks.currentBookmarkId != nil
+        let canBookmark = Bookmarks.canBookmarkCurrentPlaylist
+        bookmarkButton?.isEnabled = canBookmark
+        bookmarkButton?.alpha = canBookmark ? 1.0 : 0.35
+    }
+
     func nothingPlayingConfiguration() -> UIContentUnavailableConfiguration {
         let hasBookmarks = Bookmarks.count() > 0
+        // The last thing played, to carry on with
+        let lastPlayed = Bookmarks.history.first
+
         var configuration = UIContentUnavailableConfiguration.empty()
         configuration.image = UIImage(systemName: "music.note")
         configuration.imageProperties.tintColor = NowPlayingViewController.secondaryText
         configuration.text = "Nothing Playing"
         configuration.textProperties.color = .white
-        configuration.secondaryText = hasBookmarks
-            ? "Choose an album, artist or playlist to start listening, or carry on from a bookmark."
-            : "Choose an album, artist or playlist to start listening."
+        if lastPlayed != nil {
+            configuration.secondaryText = "Pick up where you left off, or choose an album, artist or playlist."
+        }
+        else {
+            configuration.secondaryText = hasBookmarks
+                ? "Choose an album, artist or playlist to start listening, or carry on from a bookmark."
+                : "Choose an album, artist or playlist to start listening."
+        }
         configuration.secondaryTextProperties.color = NowPlayingViewController.secondaryText
 
         // The deeper light-mode red, as for the bookmark and shuffle buttons on this dark screen
-        var browse = UIButton.Configuration.filled()
-        browse.title = "Browse Artists"
-        browse.baseBackgroundColor = accentColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
-        browse.baseForegroundColor = .white
-        browse.cornerStyle = .capsule
-        configuration.button = browse
-        configuration.buttonProperties.primaryAction = UIAction { [weak self] _ in
-            self?.showTab(titled: "Artists")
-        }
+        var primary = UIButton.Configuration.filled()
+        primary.baseBackgroundColor = accentColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
+        primary.baseForegroundColor = .white
+        primary.cornerStyle = .capsule
+        primary.titleLineBreakMode = .byTruncatingTail
+        var secondary = UIButton.Configuration.plain()
+        secondary.baseForegroundColor = .white
 
-        if hasBookmarks {
-            var bookmarks = UIButton.Configuration.plain()
-            bookmarks.title = "Open Bookmarks"
-            bookmarks.baseForegroundColor = .white
-            configuration.secondaryButton = bookmarks
+        if let lastPlayed = lastPlayed {
+            // Continue “<last thing played>”, and Browse Artists underneath
+            primary.title = "Continue “\(lastPlayed.playlist.title)”"
+            primary.image = UIImage(systemName: "play.fill")
+            primary.imagePadding = 8
+            configuration.button = primary
+            configuration.buttonProperties.primaryAction = UIAction { [weak self] _ in
+                if !Bookmarks.resumeHistoryEntry(id: lastPlayed.id), let window = self?.view.window {
+                    PlaylistActions.showToast("None of its songs are on this device", in: window)
+                }
+            }
+            secondary.title = "Browse Artists"
+            configuration.secondaryButton = secondary
             configuration.secondaryButtonProperties.primaryAction = UIAction { [weak self] _ in
-                self?.showTab(titled: "Bookmarks")
+                self?.showTab(titled: "Artists")
+            }
+        }
+        else {
+            primary.title = "Browse Artists"
+            configuration.button = primary
+            configuration.buttonProperties.primaryAction = UIAction { [weak self] _ in
+                self?.showTab(titled: "Artists")
+            }
+            if hasBookmarks {
+                secondary.title = "Open Bookmarks"
+                configuration.secondaryButton = secondary
+                configuration.secondaryButtonProperties.primaryAction = UIAction { [weak self] _ in
+                    self?.showTab(titled: "Bookmarks")
+                }
             }
         }
         return configuration
@@ -294,11 +333,7 @@ class NowPlayingViewController: UIViewController, Subscriber {
         pressingBackward = false
 
         // Bookmarked when the list being played has a bookmark
-        bookmarkButton?.isSelected = Player.sharedInstance.nowPlayingID != nil && Bookmarks.currentBookmarkId != nil
-        // Dimmed and unavailable when the playlist being played has been deleted
-        let canBookmark = Bookmarks.canBookmarkCurrentPlaylist
-        bookmarkButton?.isEnabled = canBookmark
-        bookmarkButton?.alpha = canBookmark ? 1.0 : 0.35
+        updateBookmarkButton()
         updateShuffleButton()
 
         // change the back button to cancel and add an event handler

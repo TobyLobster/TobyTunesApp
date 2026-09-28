@@ -9,13 +9,22 @@
 import UIKit
 import MediaPlayer
 
-/// The Bookmarks tab: a single-column list of bookmarks, each remembering a place in an album, artist
-/// or playlist. Works like the Playlists list: tap to resume, swipe left to delete, Edit to delete or
-/// drag to reorder, press and hold for more (or to drag).
+/// The Bookmarks tab, with two lists switched at the top: Bookmarks (places you've chosen to keep) and
+/// Recent (History: the last albums, artists and playlists played, each remembering its place). Both
+/// work like the Playlists list: tap to resume, swipe left to remove, press and hold for more. Bookmarks
+/// can also be reordered (Edit, or press, hold and drag); Recent can be cleared.
 class BookmarksViewController: UICollectionViewController, UICollectionViewDragDelegate, UICollectionViewDropDelegate, Subscriber {
 
+    private enum Mode: Int {
+        case bookmarks = 0, recent = 1
+    }
+
+    private var mode: Mode = .bookmarks
+    private let modeControl = UISegmentedControl(items: ["Bookmarks", "Recent"])
+    private lazy var clearButton = UIBarButtonItem(title: "Clear", style: .plain, target: self, action: #selector(confirmClearHistory))
+
     private var dataSource: UICollectionViewDiffableDataSource<Int, Int>!
-    /// Artwork by bookmark ID, cleared on reload.
+    /// Artwork by bookmark or History entry ID, cleared on reload.
     private var thumbnails: [Int: UIImage] = [:]
 
     // MARK: - View
@@ -23,7 +32,12 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDragD
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Bookmarks"
-        navigationItem.leftBarButtonItem = editButtonItem
+        // The Bookmarks | Recent switch takes the title's place
+        modeControl.selectedSegmentIndex = mode.rawValue
+        modeControl.addTarget(self, action: #selector(modeChanged), for: .valueChanged)
+        navigationItem.titleView = modeControl
+        navigationItem.largeTitleDisplayMode = .never
+        updateLeftButton()
 
         configureList()
 
@@ -38,7 +52,7 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDragD
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // Bookmarks are added and moved on while this screen is hidden
+        // Bookmarks and History change while this screen is hidden
         reload(animated: false)
     }
 
@@ -47,18 +61,43 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDragD
         collectionView.isEditing = editing
     }
 
+    @objc private func modeChanged() {
+        mode = Mode(rawValue: modeControl.selectedSegmentIndex) ?? .bookmarks
+        if isEditing {
+            setEditing(false, animated: false)
+        }
+        updateLeftButton()
+        reload(animated: false, fresh: true)
+    }
+
+    /// Edit for Bookmarks; Clear for Recent.
+    private func updateLeftButton() {
+        navigationItem.leftBarButtonItem = mode == .bookmarks ? editButtonItem : clearButton
+        clearButton.isEnabled = !Bookmarks.history.isEmpty
+    }
+
     private func configureList() {
         var configuration = UICollectionLayoutListConfiguration(appearance: .plain)
         configuration.backgroundColor = UIColor.systemBackground
-        // Swipe left on a bookmark to delete it
+        // Swipe left: delete a bookmark; remove a Recent entry (or keep it as a bookmark)
         configuration.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
-            guard let self = self, let bookmarkId = self.dataSource.itemIdentifier(for: indexPath) else { return nil }
-            let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, completion in
-                self?.delete(bookmarkId: bookmarkId)
+            guard let self = self, let id = self.dataSource.itemIdentifier(for: indexPath) else { return nil }
+            let delete = UIContextualAction(style: .destructive, title: self.mode == .bookmarks ? "Delete" : "Remove") { [weak self] _, _, completion in
+                self?.remove(id: id)
                 completion(true)
             }
             delete.image = UIImage(systemName: "trash")
-            return UISwipeActionsConfiguration(actions: [delete])
+            var actions = [delete]
+            if self.mode == .recent && !Bookmarks.isBookmarked(historyEntryId: id) {
+                let bookmark = UIContextualAction(style: .normal, title: "Bookmark") { [weak self] _, _, completion in
+                    self?.bookmark(historyEntryId: id)
+                    completion(true)
+                }
+                bookmark.image = UIImage(systemName: "bookmark")
+                bookmark.backgroundColor = accentColor
+                actions.append(bookmark)
+            }
+            return UISwipeActionsConfiguration(actions: actions)
         }
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout.list(using: configuration)
         collectionView.allowsSelectionDuringEditing = false
@@ -68,49 +107,75 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDragD
         collectionView.dropDelegate = self
         collectionView.dragInteractionEnabled = true
 
-        let cellRegistration = UICollectionView.CellRegistration<BookmarkListCell, Int> { [weak self] cell, _, bookmarkId in
-            self?.configure(cell: cell, bookmarkId: bookmarkId)
+        let cellRegistration = UICollectionView.CellRegistration<BookmarkListCell, Int> { [weak self] cell, _, id in
+            self?.configure(cell: cell, id: id)
         }
-        dataSource = UICollectionViewDiffableDataSource<Int, Int>(collectionView: collectionView) { collectionView, indexPath, bookmarkId in
-            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: bookmarkId)
+        dataSource = UICollectionViewDiffableDataSource<Int, Int>(collectionView: collectionView) { collectionView, indexPath, id in
+            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: id)
         }
 
-        // Drag the handles to reorder while editing
+        // Drag the handles to reorder bookmarks while editing (Recent stays newest first)
         dataSource.reorderingHandlers.canReorderItem = { [weak self] _ in
-            return self?.isEditing ?? false
+            guard let self = self else { return false }
+            return self.isEditing && self.mode == .bookmarks
         }
-        dataSource.reorderingHandlers.didReorder = { transaction in
+        dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
             // Save only: the list is still finishing the move, and must not be updated again here
+            guard self?.mode == .bookmarks else { return }
             Bookmarks.setOrder(transaction.finalSnapshot.itemIdentifiers)
         }
     }
 
     // MARK: - Data
 
-    private func reload(animated: Bool) {
+    /// The places shown in the current list.
+    private var marks: [Bookmark] {
+        return mode == .bookmarks ? Bookmarks.data.marks : Bookmarks.history
+    }
+
+    private func mark(id: Int) -> Bookmark? {
+        return mode == .bookmarks ? Bookmarks.findMarkWithId(bookmarkId: id) : Bookmarks.findHistoryEntry(id: id)
+    }
+
+    /// Shows the current list again. `fresh` replaces it outright (after switching lists).
+    private func reload(animated: Bool, fresh: Bool = false) {
         thumbnails = [:]
-        let ids = (0..<Bookmarks.count()).compactMap { Bookmarks.getBookmarkAtIndex(index: $0)?.id }
+        let ids = marks.map { $0.id }
         var snapshot = NSDiffableDataSourceSnapshot<Int, Int>()
         snapshot.appendSections([0])
         snapshot.appendItems(ids)
-        // Bookmarks already showing will have moved on (progress, playing highlight)
-        let showing = Set(dataSource.snapshot().itemIdentifiers)
-        snapshot.reconfigureItems(ids.filter { showing.contains($0) })
-        dataSource.apply(snapshot, animatingDifferences: animated)
+        if !fresh {
+            // Places already showing will have moved on (progress, playing highlight)
+            let showing = Set(dataSource.snapshot().itemIdentifiers)
+            snapshot.reconfigureItems(ids.filter { showing.contains($0) })
+        }
+        if fresh {
+            dataSource.applySnapshotUsingReloadData(snapshot)
+        }
+        else {
+            dataSource.apply(snapshot, animatingDifferences: animated)
+        }
         updateEmptyState()
+        updateLeftButton()
     }
 
     private func updateEmptyState() {
-        if Bookmarks.count() == 0 {
-            var configuration = UIContentUnavailableConfiguration.empty()
+        guard marks.isEmpty else {
+            contentUnavailableConfiguration = nil
+            return
+        }
+        var configuration = UIContentUnavailableConfiguration.empty()
+        if mode == .bookmarks {
             configuration.image = UIImage(systemName: "bookmark")
             configuration.text = "No Bookmarks"
             configuration.secondaryText = "Tap the bookmark button on Now Playing to remember your place in an album, artist or playlist."
-            contentUnavailableConfiguration = configuration
         }
         else {
-            contentUnavailableConfiguration = nil
+            configuration.image = UIImage(systemName: "clock.arrow.circlepath")
+            configuration.text = "Nothing Played Yet"
+            configuration.secondaryText = "The albums, artists and playlists you play appear here, so you can pick up where you left off."
         }
+        contentUnavailableConfiguration = configuration
     }
 
     @objc func musicLibraryUpdated() {
@@ -123,9 +188,10 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDragD
 
     // MARK: - Cells
 
-    private func configure(cell: BookmarkListCell, bookmarkId: Int) {
-        guard let mark = Bookmarks.findMarkWithId(bookmarkId: bookmarkId) else { return }
-        let isPlaying = Player.sharedInstance.nowPlayingID != nil && bookmarkId == Bookmarks.currentBookmarkId
+    private func configure(cell: BookmarkListCell, id: Int) {
+        guard let mark = self.mark(id: id) else { return }
+        let followingID = mode == .bookmarks ? Bookmarks.currentBookmarkId : Bookmarks.currentHistoryId
+        let isPlaying = Player.sharedInstance.nowPlayingID != nil && id == followingID
 
         let total = mark.playlist.totalDuration
         let elapsed = total > 0 ? mark.elapsedTime() : 0
@@ -147,7 +213,7 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDragD
         cell.setArtwork(thumbnail(for: mark))
 
         cell.onOptions = { [weak self, weak cell] in
-            self?.showOptions(for: bookmarkId, from: cell?.optionsButton)
+            self?.showOptions(for: id, from: cell?.optionsButton)
         }
         cell.accessories = [
             .customView(configuration: cell.optionsAccessory),
@@ -155,7 +221,7 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDragD
             .reorder(displayed: .whenEditing),
         ]
 
-        // Highlight the bookmark for what's playing, like the other lists
+        // Highlight the one for what's playing, like the other lists
         cell.configurationUpdateHandler = { cell, state in
             var background = UIBackgroundConfiguration.listCell().updated(for: state)
             if isPlaying && !state.isHighlighted && !state.isSelected {
@@ -179,16 +245,23 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDragD
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        guard !isEditing, let bookmarkId = dataSource.itemIdentifier(for: indexPath) else { return }
-        resume(bookmarkId: bookmarkId, fromStart: false)
+        guard !isEditing, let id = dataSource.itemIdentifier(for: indexPath) else { return }
+        resume(id: id, fromStart: false)
     }
 
-    /// Plays the bookmark (from where it was left, or from the start) and goes to Now Playing.
-    private func resume(bookmarkId: Int, fromStart: Bool) {
-        if fromStart {
-            Bookmarks.resetBookmark(bookmarkId: bookmarkId)
+    /// Plays the bookmark or Recent entry (from where it was left, or from the start) and goes to Now Playing.
+    private func resume(id: Int, fromStart: Bool) {
+        let started: Bool
+        if mode == .bookmarks {
+            if fromStart {
+                Bookmarks.resetBookmark(bookmarkId: id)
+            }
+            started = Bookmarks.resumeBookmark(bookmarkId: id)
         }
-        if Bookmarks.resumeBookmark(bookmarkId: bookmarkId) {
+        else {
+            started = Bookmarks.resumeHistoryEntry(id: id, fromStart: fromStart)
+        }
+        if started {
             TTSegue(identifier: nil, source: self, destination: self).perform()
         }
         else if let window = view.window {
@@ -196,41 +269,79 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDragD
         }
     }
 
-    private func delete(bookmarkId: Int) {
-        guard Bookmarks.removeBookmark(bookmarkId: bookmarkId) != nil else { return }
+    /// Deletes a bookmark, or removes an entry from Recent.
+    private func remove(id: Int) {
+        if mode == .bookmarks {
+            guard Bookmarks.removeBookmark(bookmarkId: id) != nil else { return }
+        }
+        else {
+            Bookmarks.removeHistoryEntry(id: id)
+        }
         var snapshot = dataSource.snapshot()
-        snapshot.deleteItems([bookmarkId])
+        snapshot.deleteItems([id])
         dataSource.apply(snapshot, animatingDifferences: true)
         updateEmptyState()
+        updateLeftButton()
     }
 
-    private func actions(for bookmarkId: Int) -> [UIAction] {
-        return [
-            UIAction(title: "Resume", image: UIImage(systemName: "play")) { [weak self] _ in
-                self?.resume(bookmarkId: bookmarkId, fromStart: false)
-            },
-            UIAction(title: "Play From Start", image: UIImage(systemName: "backward.end")) { [weak self] _ in
-                self?.resume(bookmarkId: bookmarkId, fromStart: true)
-            },
-            UIAction(title: "Delete Bookmark", image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] _ in
-                self?.delete(bookmarkId: bookmarkId)
-            },
-        ]
+    /// Keeps a Recent entry as a bookmark too.
+    private func bookmark(historyEntryId id: Int) {
+        let added = Bookmarks.bookmarkHistoryEntry(id: id)
+        if let window = view.window {
+            PlaylistActions.showToast(added ? "Bookmarked" : "Already bookmarked", in: window)
+        }
     }
 
-    /// The ⋯ button on a bookmark: the same choices as its long-press menu.
-    private func showOptions(for bookmarkId: Int, from sourceView: UIView?) {
-        guard let mark = Bookmarks.findMarkWithId(bookmarkId: bookmarkId) else { return }
+    @objc private func confirmClearHistory() {
+        let sheet = UIAlertController(title: "Clear Recent?", message: "Your bookmarks aren't affected.", preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: "Clear Recent", style: .destructive) { [weak self] _ in
+            Bookmarks.clearHistory()
+            self?.reload(animated: true)
+        })
+        sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        sheet.popoverPresentationController?.barButtonItem = clearButton
+        present(sheet, animated: true, completion: nil)
+    }
+
+    /// The choices for a bookmark or Recent entry, for its long-press menu and its ⋯ button.
+    private func menuActions(for id: Int) -> (play: [UIAction], other: [UIAction]) {
+        let resume = UIAction(title: "Resume", image: UIImage(systemName: "play")) { [weak self] _ in
+            self?.resume(id: id, fromStart: false)
+        }
+        let restart = UIAction(title: "Play From Start", image: UIImage(systemName: "backward.end")) { [weak self] _ in
+            self?.resume(id: id, fromStart: true)
+        }
+        if mode == .bookmarks {
+            let delete = UIAction(title: "Delete Bookmark", image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] _ in
+                self?.remove(id: id)
+            }
+            return ([resume, restart], [delete])
+        }
+        let alreadyBookmarked = Bookmarks.isBookmarked(historyEntryId: id)
+        let bookmark = UIAction(title: alreadyBookmarked ? "Bookmarked" : "Bookmark",
+                                image: UIImage(systemName: alreadyBookmarked ? "bookmark.fill" : "bookmark"),
+                                attributes: alreadyBookmarked ? .disabled : []) { [weak self] _ in
+            self?.bookmark(historyEntryId: id)
+        }
+        let remove = UIAction(title: "Remove from Recent", image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] _ in
+            self?.remove(id: id)
+        }
+        return ([resume, restart], [bookmark, remove])
+    }
+
+    /// The ⋯ button: the same choices as the long-press menu.
+    private func showOptions(for id: Int, from sourceView: UIView?) {
+        guard let mark = self.mark(id: id) else { return }
         let sheet = UIAlertController(title: mark.playlist.title, message: mark.playlist.details.isEmpty ? nil : mark.playlist.details, preferredStyle: .actionSheet)
-        sheet.addAction(UIAlertAction(title: "Resume", style: .default) { [weak self] _ in
-            self?.resume(bookmarkId: bookmarkId, fromStart: false)
-        })
-        sheet.addAction(UIAlertAction(title: "Play From Start", style: .default) { [weak self] _ in
-            self?.resume(bookmarkId: bookmarkId, fromStart: true)
-        })
-        sheet.addAction(UIAlertAction(title: "Delete Bookmark", style: .destructive) { [weak self] _ in
-            self?.delete(bookmarkId: bookmarkId)
-        })
+        let actions = menuActions(for: id)
+        for action in actions.play + actions.other {
+            let style: UIAlertAction.Style = action.attributes.contains(.destructive) ? .destructive : .default
+            let alertAction = UIAlertAction(title: action.title, style: style) { _ in
+                action.performWithSender(nil, target: nil)
+            }
+            alertAction.isEnabled = !action.attributes.contains(.disabled)
+            sheet.addAction(alertAction)
+        }
         sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         // iPad shows it as a popover from the button
         if let popover = sheet.popoverPresentationController {
@@ -242,45 +353,45 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDragD
 
     override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
         guard !isEditing, indexPaths.count == 1, let indexPath = indexPaths.first,
-              let bookmarkId = dataSource.itemIdentifier(for: indexPath) else { return nil }
+              let id = dataSource.itemIdentifier(for: indexPath) else { return nil }
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
             guard let self = self else { return nil }
-            let actions = self.actions(for: bookmarkId)
-            return UIMenu(title: "", children: [
-                UIMenu(title: "", options: .displayInline, children: Array(actions.prefix(2))),
-                actions[2],
-            ])
+            let actions = self.menuActions(for: id)
+            var children: [UIMenuElement] = [UIMenu(title: "", options: .displayInline, children: actions.play)]
+            children.append(contentsOf: actions.other as [UIMenuElement])
+            return UIMenu(title: "", children: children)
         }
     }
 
-    // MARK: - Press, hold and drag to reorder
+    // MARK: - Press, hold and drag to reorder (Bookmarks only)
 
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-        // In Edit the drag handles do this
-        guard !isEditing, let bookmarkId = dataSource.itemIdentifier(for: indexPath) else { return [] }
-        let dragItem = UIDragItem(itemProvider: NSItemProvider(object: String(bookmarkId) as NSString))
-        dragItem.localObject = bookmarkId
+        // In Edit the drag handles do this; Recent stays newest first
+        guard !isEditing, mode == .bookmarks, let id = dataSource.itemIdentifier(for: indexPath) else { return [] }
+        let dragItem = UIDragItem(itemProvider: NSItemProvider(object: String(id) as NSString))
+        dragItem.localObject = id
         return [dragItem]
     }
 
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
         // Only bookmarks dragged within this list
-        guard session.localDragSession != nil, collectionView.hasActiveDrag else {
+        guard mode == .bookmarks, session.localDragSession != nil, collectionView.hasActiveDrag else {
             return UICollectionViewDropProposal(operation: .forbidden)
         }
         return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
     }
 
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-        guard let dropItem = coordinator.items.first,
-              let bookmarkId = dropItem.dragItem.localObject as? Int else { return }
+        guard mode == .bookmarks,
+              let dropItem = coordinator.items.first,
+              let id = dropItem.dragItem.localObject as? Int else { return }
         let ids = dataSource.snapshot().itemIdentifiers
-        guard let from = ids.firstIndex(of: bookmarkId) else { return }
+        guard let from = ids.firstIndex(of: id) else { return }
 
         var newIDs = ids
         newIDs.remove(at: from)
         let to = min(coordinator.destinationIndexPath?.item ?? newIDs.count, newIDs.count)
-        newIDs.insert(bookmarkId, at: to)
+        newIDs.insert(id, at: to)
 
         // Save, then show the new order (the list may already show it)
         Bookmarks.setOrder(newIDs)
@@ -293,7 +404,7 @@ class BookmarksViewController: UICollectionViewController, UICollectionViewDragD
         coordinator.drop(dropItem.dragItem, toItemAt: IndexPath(item: to, section: 0))
     }
 
-    // MARK: - Subscriber (keeps the playing bookmark's highlight and progress up to date)
+    // MARK: - Subscriber (keeps the playing one's highlight and progress up to date)
 
     var properties = ["updateTrack"]
 

@@ -32,5 +32,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidEnterBackground(_ scene: UIScene) {
         // Was applicationDidEnterBackground
         appDelegate?.isUIActive = false
+        // History is saved every few seconds while playing: save the latest place now
+        Bookmarks.saveHistoryIfNeeded()
     }
 }
